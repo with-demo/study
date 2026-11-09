@@ -93,6 +93,8 @@
   document.addEventListener('input',event=>{if(event.target.id==='day-memo'&&state.editor){state.editor.days[state.editorDay].memo=event.target.value;state.editorDirty=true;document.getElementById('save-status').textContent='저장하지 않은 변경사항이 있어요.';}});
   document.querySelector('[data-service-dialog]').addEventListener('cancel',event=>{event.preventDefault();Y.closeModal();});
   window.addEventListener('beforeunload',event=>{if(state.editorDirty){event.preventDefault();event.returnValue='';}});
+  // 같은 화면 ID에서 관련 명소로 이동한 방문 기록도 선택값을 복원합니다.
+  window.addEventListener('popstate',()=>{if(Y.route()===document.body.dataset.screen&&history.state?.yj)render();});
   let previousRoute=Y.route();
   window.addEventListener('hashchange',()=>{if(previousRoute==='MYTR-02'&&Y.route()!=='MYTR-02')state.tripEdit=false;if(previousRoute==='SUP-04'&&Y.route()!=='SUP-04')state.inquiryEdit=false;previousRoute=Y.route();render();Y.content.focus({preventScroll:true});window.scrollTo(0,0);});
   if(!location.hash)history.replaceState({yj:state.context},'','#HOME-01');

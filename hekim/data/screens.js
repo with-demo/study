@@ -102,6 +102,17 @@ window.YEOJEONG_SCREENS = [
     "source": "사용자 추가 요청"
   },
   {
+    "id": "TRV-06",
+    "lv1": "여행지 찾기",
+    "lv2": "상세",
+    "lv3": "명소 상세",
+    "title": "명소 상세",
+    "description": "- 선택한 명소의 이미지, 소개 및 위치 정보 조회\n- 추천 체류 시간과 방문 시기, 방문 팁 확인\n- 지도 검색 및 같은 여행지의 다른 명소 탐색\n- 여행지 상세로 돌아가기",
+    "implemented": true,
+    "sourceRow": null,
+    "source": "사용자 추가 요청"
+  },
+  {
     "id": "MYTR-01",
     "lv1": "나의 여행",
     "lv2": "목록",

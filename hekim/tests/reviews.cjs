@@ -8,7 +8,7 @@ const assert=require('node:assert/strict');
  await page.route('**/api/collab**',r=>r.fulfill({json:{records:[],user:null,githubConfigured:false}}));
  await page.goto(process.env.YEOJEONG_TEST_URL||'http://127.0.0.1:8765/hekim/index.html');
  const wait=()=>page.waitForTimeout(70),go=async id=>{await page.locator('.ui-spec-screen-picker').selectOption(id);await wait();};
- assert.equal(await page.evaluate(()=>YJStore.loggedIn),false);assert.equal(await page.evaluate(()=>YEOJEONG_SCREENS.length),21);
+ assert.equal(await page.evaluate(()=>YJStore.loggedIn),false);assert.equal(await page.evaluate(()=>YEOJEONG_SCREENS.length),22);
  for(const d of await page.evaluate(()=>YEOJEONG_DEMO.destinations.map(d=>({id:d.id,name:d.name,score:d.score})))){
   await go('TRV-01');await page.getByRole('link',{name:d.name,exact:true}).click();await page.locator('.destination-detail').waitFor();
   assert.equal(await page.locator('.destination-detail h1').innerText(),d.name);assert.match(await page.locator('.rating-link').innerText(),/후기 10개/);

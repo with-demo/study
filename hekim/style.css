@@ -990,3 +990,67 @@ html,body {background:#fff}
  .review-card h2 {font-size:16px}
  .reviews-page .result-heading {align-items:flex-start;flex-wrap:wrap}
 }
+
+/* 명소 미리보기 카드와 상세 화면 */
+.landmark-grid {grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.landmark-card {display:block;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff;transition:transform .2s,box-shadow .2s;min-width:0}
+.landmark-card:hover {transform:translateY(-2px);box-shadow:0 8px 24px #294a3512}
+.landmark-image {position:relative;aspect-ratio:16/10;overflow:hidden;background:#e7eee3}
+.landmark-image img {height:100%;width:100%;object-fit:cover;transition:transform .25s}
+.landmark-card:hover img {transform:scale(1.035)}
+.spot-grid .landmark-index {position:absolute;top:10px;left:10px;background:#fffef0e8;border-radius:4px;padding:3px 7px;font-size:9px;color:#4d6956;margin:0}
+.landmark-content {padding:15px 16px 18px}
+.spot-grid .landmark-category {font-size:9px;color:#87947c;margin-bottom:6px}
+.landmark-content h3 {display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:15px;line-height:1.5;margin:0;word-break:keep-all}
+.spot-grid .landmark-content h3>span {display:inline;color:#7a8b73;font-size:14px;margin:0;flex:none}
+.landmark-content p {font-size:10px;color:#7c8977;margin:7px 0 0;line-height:1.8;word-break:keep-all}
+.spot-detail-hero {display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);align-items:stretch;margin-bottom:30px;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:#f3f7ee}
+.spot-detail-image {background:#e0ebe1;min-height:320px}
+.spot-detail-image img {height:100%;width:100%;object-fit:cover}
+.spot-detail-title {padding:40px 35px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
+.spot-detail-title .eyebrow {font-size:10px;letter-spacing:.8px;line-height:1.8}
+.spot-detail-title h1 {font-size:34px;line-height:1.45;letter-spacing:-1px;margin:13px 0 15px;word-break:keep-all}
+.spot-detail-title p {font-size:14px;line-height:1.8;color:#6e8166;margin:0 0 25px;word-break:keep-all}
+.spot-location {font-size:11px;color:#75856c;line-height:1.9}
+.spot-info-layout {display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:25px;align-items:start}
+.spot-story h2 {font-size:23px;margin:9px 0 22px}
+.spot-story>p {font-size:13px;line-height:2;color:#6a7b63;word-break:keep-all}
+.spot-story h3 {font-size:14px;margin:25px 0 12px}
+.spot-highlight {border-left:3px solid #91a578;padding:12px 17px;background:#f4f7ee;margin-top:25px}
+.spot-highlight span {display:block;font-size:10px;color:#8a997a;margin-bottom:7px}
+.spot-highlight strong {font-size:13px;font-weight:500;color:#59704f;line-height:1.8}
+.spot-visit dl {display:grid;grid-template-columns:100px minmax(0,1fr);gap:14px 13px;font-size:11px;line-height:1.9;margin:20px 0 23px}
+.spot-visit dt {color:#89937f}
+.spot-visit dd {margin:0;word-break:keep-all;overflow-wrap:anywhere}
+.external-map-link {display:block;text-align:center;width:100%;background:#f5f8ef}
+.spot-related {padding:17px 0 5px}
+.spot-related .section-heading h2 {font-size:23px}
+@media(min-width:1101px) {
+ .with-spec .spot-detail-hero {grid-template-columns:1fr}
+ .with-spec .spot-detail-image {height:300px;min-height:0}
+ .with-spec .spot-detail-title {padding:25px 30px}
+ .with-spec .spot-detail-title h1 {font-size:30px}
+ .with-spec .spot-info-layout {grid-template-columns:1fr}
+}
+@media(max-width:900px) {
+ .spot-info-layout {grid-template-columns:1fr}
+ .spot-detail-title {padding:28px 24px}
+ .spot-detail-title h1 {font-size:28px}
+ .spot-visit dl {grid-template-columns:110px minmax(0,1fr)}
+}
+@media(max-width:700px) {
+ .landmark-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+ .spot-detail-hero {grid-template-columns:1fr}
+ .spot-detail-image {min-height:0;aspect-ratio:16/10}
+ .spot-detail-title {padding:26px 22px}
+ .spot-detail-title p {margin-bottom:16px}
+}
+@media(max-width:500px) {
+ .landmark-grid {grid-template-columns:minmax(0,1fr)}
+ .landmark-content {padding:16px}
+ .landmark-content h3 {font-size:17px}
+ .landmark-content p {font-size:11px}
+ .spot-story h2 {font-size:21px}
+ .spot-visit dl {grid-template-columns:90px minmax(0,1fr);gap:13px}
+ .spot-related .section-heading h2 {font-size:21px}
+}
