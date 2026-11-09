@@ -992,18 +992,18 @@ html,body {background:#fff}
 }
 
 /* 명소 미리보기 카드와 상세 화면 */
-.landmark-grid {grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.landmark-grid {grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .landmark-card {display:block;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff;transition:transform .2s,box-shadow .2s;min-width:0}
 .landmark-card:hover {transform:translateY(-2px);box-shadow:0 8px 24px #294a3512}
-.landmark-image {position:relative;aspect-ratio:16/10;overflow:hidden;background:#e7eee3}
+.landmark-image {position:relative;aspect-ratio:2/1;max-height:140px;overflow:hidden;background:#e7eee3}
 .landmark-image img {height:100%;width:100%;object-fit:cover;transition:transform .25s}
 .landmark-card:hover img {transform:scale(1.035)}
 .spot-grid .landmark-index {position:absolute;top:10px;left:10px;background:#fffef0e8;border-radius:4px;padding:3px 7px;font-size:9px;color:#4d6956;margin:0}
-.landmark-content {padding:15px 16px 18px}
-.spot-grid .landmark-category {font-size:9px;color:#87947c;margin-bottom:6px}
+.landmark-content {padding:11px 12px 13px}
+.spot-grid .landmark-category {font-size:9px;color:#87947c;margin-bottom:4px}
 .landmark-content h3 {display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:15px;line-height:1.5;margin:0;word-break:keep-all}
 .spot-grid .landmark-content h3>span {display:inline;color:#7a8b73;font-size:14px;margin:0;flex:none}
-.landmark-content p {font-size:10px;color:#7c8977;margin:7px 0 0;line-height:1.8;word-break:keep-all}
+.landmark-content p {font-size:10px;color:#7c8977;margin:4px 0 0;line-height:1.8;word-break:keep-all}
 .spot-detail-hero {display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);align-items:stretch;margin-bottom:30px;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:#f3f7ee}
 .spot-detail-image {background:#e0ebe1;min-height:320px}
 .spot-detail-image img {height:100%;width:100%;object-fit:cover}
@@ -1047,8 +1047,8 @@ html,body {background:#fff}
 }
 @media(max-width:500px) {
  .landmark-grid {grid-template-columns:minmax(0,1fr)}
- .landmark-content {padding:16px}
- .landmark-content h3 {font-size:17px}
+ .landmark-content {padding:11px 12px 13px}
+ .landmark-content h3 {font-size:15px}
  .landmark-content p {font-size:11px}
  .spot-story h2 {font-size:21px}
  .spot-visit dl {grid-template-columns:90px minmax(0,1fr);gap:13px}
