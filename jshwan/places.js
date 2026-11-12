@@ -3895,7 +3895,7 @@ const usedOriginalPlaces=new Set();
 const enhancedPlaces=PLACE_GUIDES.map((guide,index)=>{
  const existing=originalPlaces.find(p=>p.city===guide.city&&!usedOriginalPlaces.has(p.id)&&(placeKey(p.name)===placeKey(guide.name)||(Math.min(placeKey(p.name).length,placeKey(guide.name).length)>=3&&(placeKey(p.name).includes(placeKey(guide.name))||placeKey(guide.name).includes(placeKey(p.name))))||placeKey(EXISTING_PLACE_WIKIS[p.id])===placeKey(guide.wiki)));
  if(existing)usedOriginalPlaces.add(existing.id);
- return {...existing,...guide,id:existing?.id||guide.city.toLowerCase()+'-guide-'+String(index+1).padStart(3,'0'),travel:null,duration:guide.nearby?'day':'half',free:null,access:'도심 기준 경로와 교통수단은 지도를 참고해 계획해 주세요.',hours:'방문 전 공식 운영 안내 확인',cost:'시설·관람 구역별 요금 확인 필요'};
+ return {...existing,...guide,id:existing?.id||guide.city.toLowerCase()+'-guide-'+String(index+1).padStart(3,'0'),travel:Number.isFinite(existing?.travel)?existing.travel:null,duration:existing?.duration||(guide.nearby?'day':'half'),free:typeof existing?.free==='boolean'?existing.free:null,access:'도심 기준 경로와 교통수단은 지도를 참고해 계획해 주세요.',hours:'방문 전 공식 운영 안내 확인',cost:'시설·관람 구역별 요금 확인 필요'};
 });
 // Retain saved-place IDs and any different existing neighbourhood candidates.
 originalPlaces.filter(p=>!usedOriginalPlaces.has(p.id)&&!enhancedPlaces.some(x=>x.city===p.city&&placeKey(x.name)===placeKey(p.name))).forEach(p=>enhancedPlaces.push({...p,wiki:EXISTING_PLACE_WIKIS[p.id]||enhancedPlaces.find(x=>x.city===p.city&&placeKey(x.name).includes(placeKey(p.name)))?.wiki,source:SOURCE_LINKS[p.city],highlights:[p.category+' 탐방','주변 거리 산책','지역 풍경 감상'],tip:'방문할 구역을 정하고 공식 안내에서 운영 상황과 동선을 확인해 보세요.'}));
