@@ -49,5 +49,18 @@ test('관심 장소 저장·복원',"(()=>{saved.places=['asakusa'];persist();re
 test('관심 항공편 저장·복원',"(()=>{saved.flights=[makeFlights(city('TYO'),state.query)[0]];persist();return readSaved().flights.length===1})()");
 test('외부 판매처 예시 안내',"(()=>{flightDetail(makeFlights(city('TYO'),state.query)[0]);const body=document.getElementById('dialog-content').innerHTML||document.getElementById('modal-body').innerHTML;return body.includes('표시 가격으로 예약되는 링크가 아닙니다')})()");
 test('비교표 생성',"(()=>{state.compare=makeFlights(city('TYO'),state.query).slice(0,2);comparison();const body=document.getElementById('dialog-content').innerHTML||document.getElementById('modal-body').innerHTML;return body.includes('총액')&&body.includes('비교에서 제거')})()");
+test('목적지 30개',"CITIES.length===30");
+test('모든 도시에 명소·근교 존재',"CITIES.every(c=>PLACES.some(p=>p.city===c.id&&!p.nearby)&&PLACES.some(p=>p.city===c.id&&p.nearby))");
+test('도시·공항 ID 중복 없음',"new Set(CITIES.map(c=>c.id)).size===30&&new Set(CITIES.map(c=>c.airport)).size===30");
+test('모든 도시 공식 안내 연결',"CITIES.every(c=>SOURCE_LINKS[c.id]?.startsWith('https://'))");
+test('공항 코드 검색 대소문자',"resolveDestination('nrt').id==='TYO'&&resolveDestination('CDG').id==='PAR'");
+test('영문 도시 공백 검색',"resolveDestination('Los Angeles').id==='LAX'&&resolveDestination('New York').id==='NYC'");
+test('한글 국가 검색',"CITIES.filter(c=>matchesDestination(c,'일본')).length===6");
+test('영문 국가 검색',"CITIES.filter(c=>matchesDestination(c,'Japan')).length===6");
+test('지역 분류 6개',"DESTINATION_REGIONS.length===6&&CITIES.every(c=>DESTINATION_REGIONS.includes(c.region))");
+test('모든 목적지 왕복 요금 유효',"CITIES.every(c=>Number.isFinite(schedulePrice(c,state.query))&&schedulePrice(c,state.query)>0)");
+test('출발지와 같은 공항 차단',"validateQuery({...state.query,origin:'PUS',destination:'PUS'})!==''");
+test('검색 가능한 선택창 생성',"destinationField('PAR').includes('파리 · CDG')&&destinationField('ANY').includes('어디든지')");
+test('목적지 검색 결과 필터',"(()=>{document.getElementById('destination-search').value='프랑스';destinationRegion='all';renderDestinationChoices();return document.getElementById('destination-results').innerHTML.includes('파리')&&!document.getElementById('destination-results').innerHTML.includes('오사카')})()");
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');for(const match of html.matchAll(/(?:src|href)="([^"#][^"]*)"/g)){const target=match[1].split('?')[0];if(/^(https?:|data:)/.test(target)||target.includes('../common/'))continue;assert.ok(fs.existsSync(path.resolve(root,target)),'Missing resource: '+target);}
 console.log(JSON.stringify({folder:root,passed:results.filter(t=>t.status==='PASS').length,total:results.length,results},null,2));if(results.some(t=>t.status==='FAIL'))process.exitCode=1;
