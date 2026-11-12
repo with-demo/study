@@ -192,7 +192,7 @@ const EXPANDED_DESTINATIONS = [
     "cebu 막탄 mactan",
     "산토니뇨 성당",
     "막탄섬",
-    "https://philippines.travel/"
+    "https://tourism.cebu.gov.ph/"
   ],
   [
     "DPS",

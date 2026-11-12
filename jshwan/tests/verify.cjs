@@ -3,7 +3,7 @@ const root=process.argv[2];if(!root)throw Error('검사할 사이트 폴더를 �
 const elements=new Map(),store=new Map(),listeners={};
 function el(id){if(!elements.has(id))elements.set(id,{innerHTML:'',textContent:'',value:'',hidden:false,open:false,dataset:{},classList:{add(){},remove(){}},focus(){},addEventListener(){},querySelector(){return {addEventListener(){}}},querySelectorAll(){return []},showModal(){this.open=true},show(){this.open=true},close(){this.open=false}});return elements.get(id);}
 const sandbox={Date,Intl,Math,Number,String,Array,Object,JSON,Set,encodeURIComponent,URL,Event:class{},CustomEvent:class{},document:{getElementById:el,querySelector(){return el('query')},querySelectorAll(){return []},addEventListener(k,f){listeners[k]=f}},localStorage:{getItem:k=>store.get(k)||null,setItem:(k,v)=>store.set(k,v)},location:{hash:'#home'},window:{scrollTo(){},scrollY:0,addEventListener(){},dispatchEvent(){}},navigator:{},setTimeout(){return 1},clearTimeout(){}};
-const ctx=vm.createContext(sandbox);const data=fs.readFileSync(path.join(root,'data.js'),'utf8'),app=fs.readFileSync(path.join(root,'app.js'),'utf8');new vm.Script(data);new vm.Script(app);vm.runInContext(data+'\n'+app,ctx);
+const ctx=vm.createContext(sandbox);const data=['data.js','places.js','photos.js'].map(file=>fs.readFileSync(path.join(root,file),'utf8')).join('\n'),app=fs.readFileSync(path.join(root,'app.js'),'utf8');new vm.Script(data);new vm.Script(app);vm.runInContext(data+'\n'+app,ctx);
 const results=[];function test(name,code){try{assert.ok(vm.runInContext(code,ctx));results.push({name,status:'PASS'});}catch(e){results.push({name,status:'FAIL',error:e.message});}}
 test('윤년·연도 경계',"addDays('2028-02-28',1)==='2028-02-29'&&addDays('2027-12-31',1)==='2028-01-01'");
 test('숙박 일수',"nights('2027-03-12','2027-03-15')===3");
@@ -62,5 +62,16 @@ test('모든 목적지 왕복 요금 유효',"CITIES.every(c=>Number.isFinite(sc
 test('출발지와 같은 공항 차단',"validateQuery({...state.query,origin:'PUS',destination:'PUS'})!==''");
 test('검색 가능한 선택창 생성',"destinationField('PAR').includes('파리 · CDG')&&destinationField('ANY').includes('어디든지')");
 test('목적지 검색 결과 필터',"(()=>{document.getElementById('destination-search').value='프랑스';destinationRegion='all';renderDestinationChoices();return document.getElementById('destination-results').innerHTML.includes('파리')&&!document.getElementById('destination-results').innerHTML.includes('오사카')})()");
+test('모든 도시 최소 8개 후보',"CITIES.every(c=>PLACES.filter(p=>p.city===c.id).length>=8)&&PLACES.length>=240");
+test('도시별 근교·주변 최소 2곳',"CITIES.every(c=>PLACES.filter(p=>p.city===c.id&&p.nearby).length>=2)");
+test('저장한 기존 장소 ID 유지',"originalPlaces.every(p=>PLACES.some(next=>next.id===p.id))");
+test('도시별 장소명 중복 없음',"new Set(PLACES.map(p=>p.city+'|'+placeKey(p.name))).size===PLACES.length");
+test('구체적인 상세 설명과 팁',"PLACE_GUIDES.every(p=>p.desc.length>=50&&p.highlights.length===3&&p.tip.length>=10)");
+test('30개 도시 대표 사진',"CITIES.every(c=>!!PHOTO_CATALOG[CITY_WIKI_TITLES[c.id]])");
+test('장소 사진 200개 이상',"PLACES.filter(p=>!!PHOTO_CATALOG[p.wiki]).length>=200");
+test('사진 출처와 이용 조건 포함',"Object.values(PHOTO_CATALOG).every(p=>p.url.startsWith('https://')&&p.source.startsWith('https://commons.wikimedia.org/')&&p.license&&p.licenseUrl.startsWith('http'))");
+test('사진 크레딧 HTML 이스케이프',"photoFigure({url:'https://example.com/a.jpg',author:'<script>alert(1)</script>',source:'https://commons.wikimedia.org/',license:'CC BY 4.0',licenseUrl:'https://creativecommons.org/'},'./assets/city.svg','사진').includes('&lt;script&gt;')");
+test('사진 준비 전 대체 안내',"photoFigure(null,'./assets/city.svg','대체').includes('대체 일러스트')");
+test('보완된 장소 상세 콘텐츠',"(()=>{placeDetail('asakusa');const body=document.getElementById('dialog-content').innerHTML;return body.includes('이곳에서 만나는 장면')&&body.includes('함께 둘러볼 곳')&&body.includes('Wikimedia Commons')})()");
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');for(const match of html.matchAll(/(?:src|href)="([^"#][^"]*)"/g)){const target=match[1].split('?')[0];if(/^(https?:|data:)/.test(target)||target.includes('../common/'))continue;assert.ok(fs.existsSync(path.resolve(root,target)),'Missing resource: '+target);}
 console.log(JSON.stringify({folder:root,passed:results.filter(t=>t.status==='PASS').length,total:results.length,results},null,2));if(results.some(t=>t.status==='FAIL'))process.exitCode=1;
