@@ -183,10 +183,19 @@ function openCityComparison(){
  row('편도 소요시간',offers.map(o=>o?duration(o.f.minutes)+' · '+(o.f.stops?'1회 경유':'직항'):'—'))+
  row('다음 단계',ids.map((id,i)=>'<button data-shortlist-flights="'+id+'" '+(!offers[i]?'disabled':'')+'>항공편 보기</button>'))+'</tbody></table></div>',6);
 }
+function mergeExperienceState(privateState,shared,hash){
+ if(!privateState&&!shared)return null;
+ const merged={...(privateState||{}),...(shared||{})};
+ const linkedCity=String(hash||'').split('/')[1];
+ if(shared&&String(hash).startsWith('#JSH-02/')&&city(linkedCity))merged.exploreCity=linkedCity;
+ return merged;
+}
 function initializeExperience(){
  experienceDefaults=experienceSnapshot();
- let initial=null;try{const encoded=new URL(location.href).searchParams.get('wq');if(encoded&&encoded.length<6000)initial=JSON.parse(encoded);}catch{/* Keep defaults for malformed links. */}
- if(!initial)try{initial=JSON.parse(sessionStorage.getItem(EXPERIENCE_KEY)||'null');}catch{/* Session storage is optional. */}
+ let privateState=history.state?.whever||null,shared=null;
+ if(!privateState)try{privateState=JSON.parse(sessionStorage.getItem(EXPERIENCE_KEY)||'null');}catch{/* Session storage is optional. */}
+ try{const encoded=new URL(location.href).searchParams.get('wq');if(encoded&&encoded.length<6000)shared=JSON.parse(encoded);}catch{/* Keep defaults for malformed links. */}
+ const initial=mergeExperienceState(privateState,shared,location.hash);
  if(initial)applyExperience(initial);
  try{history.scrollRestoration='manual';history.replaceState({...history.state,whever:experienceSnapshot(),scrollY:0},'',location.href);}catch{/* Native hash navigation remains available. */}
  const originalHome=home,originalSearch=searchPage,originalExplore=explore,originalResults=results,originalFilter=filterPanel,originalRenderPlaces=renderPlaces;
