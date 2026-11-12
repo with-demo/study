@@ -96,5 +96,10 @@ test('소요시간 내 항공편이 있으면 도시 유지',"(()=>{state.query.
 test('도시 선택 최대 3개 복원 제한',"sanitizedExperience({cityComparison:['TYO','OSA','PAR','LON','BAD']},experienceDefaults).cityComparison.length===3");
 test('검색 링크 복원 시 개인 UI 상태 유지',"(()=>{const merged=mergeExperienceState({cityComparison:['TYO','OSA'],flightFiltersOpen:true},{query:{...state.query,destination:'PAR'}},'#JSH-04');return merged.cityComparison.length===2&&merged.flightFiltersOpen&&merged.query.destination==='PAR'})()");
 test('다른 도시의 공유 링크는 대상 도시 기준 복원',"mergeExperienceState({exploreCity:'TYO'},{placeFilters:{category:'자연'}},'#JSH-02/OSA').exploreCity==='OSA'");
+test('왕복 일정의 역방향 공항과 날짜',"(()=>{const f=makeFlights(city('TYO'),{...state.query,trip:'round'})[0],legs=flightLegs(f);return legs.length===2&&legs[1].from===legs[0].to&&legs[1].to===legs[0].from&&legs[1].date===f.query.back&&legs[1].departure!==legs[0].departure})()");
+test('편도는 가는 편만 표시',"(()=>{const f=makeFlights(city('TYO'),{...state.query,trip:'oneway'})[0];return flightLegs(f).length===1&&!flightCard(f).includes('오는 편 일정')})()");
+test('왕복 카드와 상세에 복편 표시',"(()=>{const f=makeFlights(city('TYO'),{...state.query,trip:'round'})[0];flightDetail(f);return flightCard(f).includes('오는 편 일정')&&document.getElementById('dialog-content').innerHTML.includes('오는 편 일정')})()");
+test('이틀 뒤 도착 표시',"arrival({departure:'23:30',minutes:1500}).includes('(+2일)')");
+test('기존 저장 항공편도 복편 생성',"(()=>{const f={city:'TYO',query:{...state.query,trip:'round'},departure:'07:30',minutes:120,stops:0};return flightLegs(f)[1].departure==='18:30'})()");
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');for(const match of html.matchAll(/(?:src|href)="([^"#][^"]*)"/g)){const target=match[1].split('?')[0];if(/^(https?:|data:)/.test(target)||target.includes('../common/'))continue;assert.ok(fs.existsSync(path.resolve(root,target)),'Missing resource: '+target);}
 console.log(JSON.stringify({folder:root,passed:results.filter(t=>t.status==='PASS').length,total:results.length,results},null,2));if(results.some(t=>t.status==='FAIL'))process.exitCode=1;
