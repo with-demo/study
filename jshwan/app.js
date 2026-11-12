@@ -54,7 +54,26 @@ function arrival(f){const [h,m]=f.departure.split(':').map(Number);const t=h*60+
 function flightCard(f){const c=city(f.city);const compare=state.compare.some(x=>x.key===f.key),isSaved=saved.flights.some(x=>x.key===f.key);return `<article class="flight"><div><span class="pill">가상 항공편</span><h3>${f.carrier}</h3><span class="meta">${f.bag?'위탁 15kg 포함':'위탁 수하물 별도'}<br>${f.query.trip==='round'?'왕복 · 복편 동일 조건 가정':'편도'}</span></div><div class="route"><div><div class="time">${f.departure}</div><span class="meta">${f.query.origin}</span></div><div class="route-line">${duration(f.minutes)}<br>${f.stops?'1회 경유':'직항'}</div><div><div class="time">${arrival(f)}</div><span class="meta">${c.airport}</span></div></div><div class="price"><small>선택 인원 ${f.query.trip==='round'?'왕복':'편도'} 총액</small>${money(f.price)}</div><div class="actions"><button class="outline" data-save-flight="${esc(f.key)}" aria-pressed="${isSaved}">${isSaved?'♥ 저장됨':'♡ 저장'}</button><button class="secondary" data-compare="${esc(f.key)}" aria-pressed="${compare}">${compare?'비교에서 빼기':'비교에 추가'}</button><button data-flight="${esc(f.key)}">상세·판매처 보기 ↗</button></div></article>`;}
 function datesAround(c){const q=state.query,dates=[];for(let n=-state.window;n<=state.window;n++){const d=addDays(q.depart,n);if(d<today)continue;const other={...q,depart:d,back:q.trip==='round'?addDays(q.back,n):d};const f=cheapest(c,other);if(f)dates.push({q:other,f});}return dates;}
 function dateButton(q,price,best=false){return `<button class="date-option ${best?'best':''}" data-date="${q.depart}" data-back="${q.back}">${dateLabel(q.depart)}${q.trip==='round'?'<br>~ '+dateLabel(q.back):''}<strong>${money(price)}</strong>${best?'예시 최저가':'이 일정 보기'}</button>`;}
-function savings(c){const current=cheapest(c),dates=datesAround(c),best=[...dates].sort((a,b)=>a.f.price-b.f.price)[0];const cheaper=current&&best&&best.f.price<current.price;return `<section class="panel"><span class="eyebrow">A SMALL CHANGE, A BETTER FARE</span><h3>${cheaper?`날짜를 바꾸면 ${money(current.price-best.f.price)} 절약할 수 있어요.`:'주변 날짜의 가격도 비교해보세요.'}</h3><p class="meta">현재 검색 최저가 대비 · 동일 인원·좌석·필터${state.query.trip==='round'?' · '+nights(state.query.depart,state.query.back)+'박 유지':''} · 실제 가격 아님</p>${cheaper?`<div class="banner"><div><strong>${dateLabel(best.q.depart)}${best.q.trip==='round'?' ~ '+dateLabel(best.q.back):''}</strong><p>${money(best.f.price)} · 현재 ${money(current.price)}</p></div><button data-date="${best.q.depart}" data-back="${best.q.back}">이 날짜의 항공편 보기</button></div>`:''}<details><summary>전후 ${state.window}일 가격 펼쳐보기</summary><div class="date-grid">${dates.map(x=>dateButton(x.q,x.f.price,x.q.depart===best?.q.depart)).join('')}</div></details><button class="outline" data-window style="margin-top:14px">전후 ${state.window===3?'7':'3'}일로 변경</button></section>`;}
+function savings(c) {
+ const current=cheapest(c),dates=datesAround(c),best=[...dates].sort((a,b)=>a.f.price-b.f.price)[0];
+ const cheaper=current&&best&&best.f.price<current.price;
+ return `<section class="panel"><span class="eyebrow">A SMALL CHANGE, A BETTER FARE</span>
+ <h3>${cheaper?`날짜를 바꾸면 ${money(current.price-best.f.price)} 절약할 수 있어요.`:'주변 날짜의 가격도 비교해보세요.'}</h3>
+ <p class="meta">현재 검색 최저가 대비 · 동일 인원·좌석·필터${state.query.trip==='round'?' · '+nights(state.query.depart,state.query.back)+'박 유지':''} · 실제 가격 아님</p>
+ ${cheaper?`<div class="banner"><div><strong>${dateLabel(best.q.depart)}${best.q.trip==='round'?' ~ '+dateLabel(best.q.back):''}</strong><p>${money(best.f.price)} · 현재 ${money(current.price)}</p></div><button data-date="${best.q.depart}" data-back="${best.q.back}">이 날짜의 항공편 보기</button></div>`:''}
+ <div class="date-discovery">
+  <div class="date-discovery-heading"><h4>주변 날짜 가격 비교</h4><span class="date-range-badge">현재 전후 ${state.window}일</span></div>
+  <p class="date-range-help">검색한 출발일의 앞뒤 며칠까지 비교할지 선택하세요.</p>
+  <div class="date-range-options" role="group" aria-label="주변 날짜 가격 비교 범위">
+   ${[3,7].map(n=>`<button type="button" data-window="${n}" aria-pressed="${state.window===n}" aria-controls="nearby-date-prices" class="date-range-option ${state.window===n?'selected':''}"><strong>${state.window===n?'✓ ':''}전후 ${n}일</strong><span>최대 ${n*2+1}개 출발일 비교</span></button>`).join('')}
+  </div>
+  <p class="date-range-status" role="status">${dates.length?`${dateLabel(dates[0].q.depart)} ~ ${dateLabel(dates[dates.length-1].q.depart)} · ${dates.length}개 출발일`: '현재 조건으로 비교할 날짜가 없습니다.'}${state.query.trip==='round'?' · 숙박 일수 유지':''}</p>
+  <details id="nearby-date-prices" class="nearby-date-prices" ${state.datePricesOpen?'open':''}>
+   <summary><span class="date-table-closed">날짜별 가격표 펼치기</span><span class="date-table-open">날짜별 가격표 접기</span><span class="date-table-chevron" aria-hidden="true">⌄</span></summary>
+   <div class="date-grid">${dates.map(x=>dateButton(x.q,x.f.price,x.q.depart===best?.q.depart)).join('')}</div>
+  </details>
+ </div></section>`;
+}
 function allCurrentFlights(){const c=city(state.query.destination);if(!c)return [];const q=state.query.mode==='flex'?bestSchedule(c)[0]?.q:state.query;return q?makeFlights(c,q):[];}
 function findFlight(key){return allCurrentFlights().find(f=>f.key===key)||saved.flights.find(f=>f.key===key)||state.compare.find(f=>f.key===key);}
 function openModal(title,html,popupNumber=1){clearPopupContext();const parent=location.hash.slice(1)||'JSH-01';$('dialog').dataset.screenId=parent+'-p'+String(popupNumber).padStart(2,'0');$('popup-id').textContent=$('dialog').dataset.screenId;$('modal-title').textContent=title;$('dialog-content').innerHTML=html;if(!$('dialog').open)$('dialog').showModal();}
@@ -71,7 +90,7 @@ document.addEventListener('click',async e=>{const el=e.target.closest('button,a'
  if(d.savePlace){const id=d.savePlace;saved.places=saved.places.includes(id)?saved.places.filter(x=>x!==id):[...saved.places,id];persist();const y=window.scrollY;route();window.scrollTo(0,y);toast(saved.places.includes(id)?'관심 장소에 저장했어요.':'저장을 해제했어요.');}
  if(d.selectCity){const best=bestSchedule(city(d.selectCity))[0];if(!best)return;state.query={...best.q,destination:d.selectCity,mode:'exact'};state.compare=[];results();}
  if(d.date){state.query={...state.query,depart:d.date,back:d.back,mode:'exact'};state.compare=[];results();toast('선택한 날짜로 검색 조건을 변경했어요.');}
- if('window'in d){state.window=state.window===3?7:3;results();}
+ if('window'in d){const range=Number(d.window);if(range===3||range===7){state.window=range;state.datePricesOpen=true;results();}}
  if('resetFilters'in d){state.filters={direct:false,carrier:'all',baggage:false,sort:'price',budget:2000000,maxDuration:1000};results();}
  if('resetPlaces'in d){state.placeFilters={category:'all',area:'all',travel:999,duration:'all',cost:'all'};explore(state.exploreCity);}
  if(d.flight)flightDetail(findFlight(d.flight));
@@ -84,6 +103,7 @@ document.addEventListener('click',async e=>{const el=e.target.closest('button,a'
 });
 function sameQuery(a,b){return ['origin','destination','trip','depart','back','adults','children','infants','cabin'].every(k=>a[k]===b[k]);}
 window.addEventListener('hashchange',route);route();
+document.addEventListener('toggle',event=>{if(event.target.id==='nearby-date-prices'&&event.target.isConnected)state.datePricesOpen=event.target.open;},true);
 
 $('dialog').addEventListener('close',()=>{if(!popupSwitching)clearPopupContext();});
 document.querySelector('[data-popup-description]').addEventListener('click',()=>{const dialog=$('dialog');popupSwitching=true;dialog.close();dialog.show();setTimeout(()=>{popupSwitching=false;},0);dialog.classList.add('sb-description-mode');window.MOCKUP_DESCRIPTION_CONTEXT={id:dialog.dataset.screenId,title:$('modal-title').textContent};window.dispatchEvent(new Event('description-context-changed'));window.dispatchEvent(new Event('annotation-open'));});

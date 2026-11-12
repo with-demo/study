@@ -32,6 +32,21 @@ dialog{border-radius:18px;background:#fff}dialog img{border-radius:12px}
 nav a:hover{color:#1664dc}#toast{box-shadow:0 8px 30px #154a8b22}
 @media(prefers-reduced-motion:reduce){.gate,#main button,#main .btn{transition:none}.gate:hover{transform:none}}
 @media(max-width:600px){header{gap:10px;flex-wrap:wrap}.logo{font-size:22px;gap:8px}.logo-mark{width:34px;height:34px}.logo small{font-size:6px;letter-spacing:1.4px}.intro .eyebrow{font-size:8px;letter-spacing:1.2px}.gate-art{height:190px}.gate-content{padding:24px}.gate{border-radius:18px}nav{gap:12px;margin-left:auto}}
+/* Date comparison: visible range choices and a separate price-table disclosure */
+.date-discovery{margin-top:22px;padding:20px;background:#f5f9ff;border:1px solid #d5e5fa;border-radius:14px}
+.date-discovery-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.date-discovery-heading h4{margin:0;font-size:16px;color:#183f6e}
+.date-range-badge{padding:4px 10px;border-radius:20px;background:#e2efff;color:#205cb0;font-size:11px;font-weight:600}
+.date-range-help{margin:9px 0 14px;color:#506b8c;font-size:12px;line-height:1.7}
+.date-range-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.date-range-options .date-range-option{min-height:70px;padding:13px 16px;border:1px solid #bed5f0;background:white;color:#34577f;text-align:left;box-shadow:none}
+.date-range-option strong,.date-range-option span{display:block}.date-range-option strong{font-size:14px}.date-range-option span{font-size:11px;margin-top:4px;font-weight:400}
+.date-range-options .date-range-option.selected{background:#165dcc;border:2px solid #165dcc;color:white;box-shadow:0 3px 9px #165dcc1a}
+.date-range-status{margin:12px 0;color:#537292;font-size:11px;line-height:1.7}
+.nearby-date-prices{margin-top:0;border-top:1px solid #d5e5fa}
+.nearby-date-prices>summary{display:flex;justify-content:space-between;align-items:center;list-style:none;min-height:48px;padding:12px 0;font-weight:700;font-size:13px;color:#165dcc}
+.nearby-date-prices>summary::-webkit-details-marker{display:none}.date-table-open{display:none}.nearby-date-prices[open] .date-table-open{display:inline}.nearby-date-prices[open] .date-table-closed{display:none}.date-table-chevron{font-size:20px}.nearby-date-prices[open] .date-table-chevron{transform:rotate(180deg)}
+@media(max-width:600px){.date-discovery{padding:16px}.date-range-options .date-range-option{padding:12px;min-height:72px}.date-range-option strong{font-size:13px}.date-range-option span{font-size:10px}}
 /* Searchable destination chooser */
 .destination-trigger{display:flex!important;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:45px;margin-top:6px;padding:12px 10px!important;border:1px solid var(--line)!important;background:#fbfdff!important;color:var(--ink)!important;text-align:left;font-weight:400!important}
 .destination-regions{display:flex;gap:7px;flex-wrap:wrap;margin:18px 0}.destination-regions button{background:#eaf3ff;color:#345f94;border:1px solid #d3e5fb;min-height:36px;padding:7px 12px}.destination-regions button.active{background:#165dcc;color:white;border-color:#165dcc}
