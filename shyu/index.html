@@ -5,27 +5,35 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="서울의 독서모임, 북토크, 도서관 프로그램을 탐색하는 예약 목업">
   <title>서울 독서행사 · 독서 프로그램 예약</title>
-  <link rel="stylesheet" href="style.css?v=20261111-original-menus">
+  <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="style.css?v=20261112-korea-live-map">
 </head>
-<body data-project="shyu" data-screen="SH-LIB-01">
+<body data-project="shyu" data-screen="SH-HOME-01">
   <div id="app">
     <header class="site-header">
       <div class="frame header-inner">
-        <a class="brand" href="#SH-LIB-01"><span aria-hidden="true">▤</span> 서울 독서행사</a>
+        <a class="brand" href="#SH-HOME-01"><span aria-hidden="true">▤</span> 서울 독서행사</a>
         <nav aria-label="주 메뉴">
-          <a href="#SH-LIB-01" data-nav="program">프로그램 찾기</a>
-          <details class="nav-group"><summary>이용 안내</summary><div class="nav-submenu"><a href="#SH-LIB-10">공지사항</a><a href="#SH-LIB-11">자주묻는 질문</a></div></details>
-          <details class="nav-group"><summary>마이페이지</summary><div class="nav-submenu"><a href="#SH-LIB-06">나의 예약내역</a><a href="#SH-LIB-12">이용 후기 작성</a></div></details>
-          <a href="#SH-LIB-03" id="account-link">로그인</a>
+          <details class="nav-group"><summary>서비스 소개</summary><div class="nav-submenu"><a href="#SH-INTRO-01">서비스 안내</a><a href="#SH-GUIDE-01">이용 방법</a></div></details>
+          <a href="#SH-PROG-01" data-nav="program">독서 프로그램</a>
+          <a href="#SH-CAL-01" data-nav="calendar">독서 캘린더</a>
+          <details class="nav-group"><summary>독서 공간</summary><div class="nav-submenu"><a href="#SH-SPACE-01">공간 목록</a><a href="#SH-SPACE-02">공간 지도</a></div></details>
+          <details class="nav-group"><summary>이용 안내</summary><div class="nav-submenu"><a href="#SH-NOTICE-01">공지사항</a><a href="#SH-FAQ-01">자주 묻는 질문</a></div></details>
+          <a href="#SH-REVIEW-01" data-nav="review">참여 이야기</a>
         </nav>
+        <div class="utility-links"><a href="#SH-AUTH-01" id="account-link">로그인</a><details class="nav-group"><summary>마이페이지</summary><div class="nav-submenu"><a href="#SH-MY-01">나의 예약 내역</a><a href="#SH-MY-03">이용 후기 작성</a><a href="#SH-MY-04">나의 후기</a><a href="#SH-MY-06">내 정보</a></div></details></div>
       </div>
     </header>
     <main id="content" tabindex="-1"></main>
-    <footer class="site-footer"><div class="frame"><div class="footer-links"><a href="#SH-LIB-10">공지사항</a><a href="#SH-LIB-11">자주묻는 질문</a><a href="#SH-LIB-06">나의 예약내역</a><a href="../index.html">팀 프로젝트 목록</a></div><strong>서울 독서행사</strong><p>기획팀 스터디 화면 목업 · 프로그램·기관 정보는 예시이며 실제 접수가 이루어지지 않습니다.</p><small>SEOUL READING PROGRAMS</small></div></footer>
+    <footer class="site-footer"><div class="frame"><div class="footer-links"><a href="#SH-NOTICE-01">공지사항</a><a href="#SH-FAQ-01">자주묻는 질문</a><a href="#SH-MY-01">나의 예약내역</a><a href="../index.html">팀 프로젝트 목록</a></div><strong>서울 독서행사</strong><p>기획팀 스터디 화면 목업 · 프로그램·기관 정보는 예시이며 실제 접수가 이루어지지 않습니다.</p><small>SEOUL READING PROGRAMS</small></div></footer>
   </div>
   <dialog id="reservation-dialog" aria-labelledby="reservation-dialog-title"></dialog>
   <script src="../common/config.js?v=study-shared-20261104"></script>
-  <script src="include/app.js?v=20261111-original-menus"></script>
+  <script src="include/data.js?v=20261112-korea-live-map"></script>
+  <script src="include/views.js?v=20261112-korea-live-map"></script>
+  <script src="assets/vendor/leaflet/leaflet.js"></script>
+  <script src="include/map.js?v=20261112-korea-live-map"></script>
+  <script src="include/app.js?v=20261112-korea-live-map"></script>
   <script src="../common/include/collaboration.js?v=study-shared-20261104"></script>
   <script src="../common/include/spec-panel.js"></script>
   <script src="../common/include/annotations.js"></script>
