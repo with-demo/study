@@ -105,6 +105,7 @@ function renderExperienceRoute(){
  requestAnimationFrame(()=>{window.scrollTo(0,scroll);$('main').focus({preventScroll:true});});
 }
 function shareConditionsButton(){return '<button type="button" class="btn outline share-conditions" data-share-conditions>검색 조건 공유 ↗</button>';}
+function appendSearchActions(section){if(!section)return;const actions=document.createElement('div');actions.className='section-actions';Array.from(section.children).slice(1).forEach(child=>actions.appendChild(child));actions.insertAdjacentHTML('beforeend',shareConditionsButton());section.appendChild(actions);}
 async function shareConditions(){
  if(location.protocol==='file:'){toast('검색 조건 공유는 배포된 사이트에서 사용할 수 있어요.');return;}
  captureSearchDraft();rememberExperience();const link=conditionsURL(location.hash,true).href;
@@ -200,9 +201,9 @@ function initializeExperience(){
  try{history.scrollRestoration='manual';history.replaceState({...history.state,whever:experienceSnapshot(),scrollY:0},'',location.href);}catch{/* Native hash navigation remains available. */}
  const originalHome=home,originalSearch=searchPage,originalExplore=explore,originalResults=results,originalFilter=filterPanel,originalRenderPlaces=renderPlaces;
  home=function(){originalHome();renderCheckpoint();};
- searchPage=function(){originalSearch();const section=document.querySelector('#main .section-head');if(section)section.insertAdjacentHTML('beforeend',shareConditionsButton());renderCheckpoint();};
- explore=function(id){originalExplore(id);wrapPlaceFilters();const section=document.querySelector('#main .section-head');if(section)section.insertAdjacentHTML('beforeend',shareConditionsButton());renderCheckpoint();};
- results=function(){originalResults();const section=document.querySelector('#main .section-head');if(section)section.insertAdjacentHTML('beforeend',shareConditionsButton());renderCheckpoint();};
+ searchPage=function(){originalSearch();const section=document.querySelector('#main .section-head');appendSearchActions(section);renderCheckpoint();};
+ explore=function(id){originalExplore(id);wrapPlaceFilters();const section=document.querySelector('#main .section-head');appendSearchActions(section);renderCheckpoint();};
+ results=function(){originalResults();const section=document.querySelector('#main .section-head');appendSearchActions(section);renderCheckpoint();};
  filterPanel=function(){return wrapFlightFilters(originalFilter());};
  renderPlaces=function(id){originalRenderPlaces(id);refreshPlaceFilterSummary();};
  savedPage=savedCityPage;go=navigateExperience;route=renderExperienceRoute;

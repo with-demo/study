@@ -71,3 +71,6 @@ nav a:hover{color:#1664dc}#toast{box-shadow:0 8px 30px #154a8b22}
 
 /* Outbound and return itineraries */
 .itinerary{min-width:0;display:grid;gap:12px}.flight-leg{padding:12px;border:1px solid #dbeafe;border-radius:12px;background:#f8fbff}.leg-heading{display:flex;justify-content:space-between;gap:12px;font-size:13px;margin-bottom:10px;color:#245b9e}.flight-leg .route{gap:10px}.flight-leg .time{font-size:19px;white-space:nowrap}.flight-leg .meta{display:block;font-size:12px}.comparison .flight-leg{min-width:260px}.flight:has(.itinerary){grid-template-columns:minmax(110px,.8fr) minmax(320px,2fr) minmax(130px,.8fr)}@media(max-width:760px){.flight:has(.itinerary){grid-template-columns:1fr}.flight .itinerary{grid-column:1/-1}.flight:has(.itinerary) .price{text-align:left}.flight-leg .time{font-size:18px}}
+
+/* Keep related heading actions together instead of distributing three columns. */
+.section-head .section-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap;flex-shrink:0}.section-actions .btn{margin:0;white-space:nowrap}@media(max-width:760px){.section-head:has(.section-actions){align-items:flex-start;flex-direction:column;gap:16px}.section-head .section-actions{justify-content:flex-start;width:100%}}
