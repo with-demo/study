@@ -240,3 +240,5 @@
 | Walk_of_Fame,_Hollywood_(20986072759).jpg | Fabio Achilli from Milano, Italy | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0) | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Walk_of_Fame,_Hollywood_(20986072759).jpg) |
 | High_West_and_Victoria_Peak_from_Victoria_Gap_(crop1).jpg | Daniel Case | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:High_West_and_Victoria_Peak_from_Victoria_Gap_(crop1).jpg) |
 | TanahLot_2014.JPG | Grayswoodsurrey | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:TanahLot_2014.JPG) |
+
+게이트 항공권 사진: Aeroplane wing.jpg — Farrah Zakir, CC BY-SA 4.0. https://commons.wikimedia.org/wiki/File:Aeroplane_wing.jpg (원본 변경 없음, CSS 화면 비율 자르기). 여행지와 항공권 입구를 동일한 실제 사진 형식으로 표시합니다.

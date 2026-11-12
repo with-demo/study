@@ -2072,3 +2072,12 @@ const PHOTO_CATALOG={
   }
 };
 const PHOTO_CHECKED_ON="2026-11-12";
+
+/* Gate: blue-sky aviation photograph, original unchanged; display crop only. */
+const GATE_FLIGHT_PHOTO={
+  "source": "https://commons.wikimedia.org/wiki/File:Aeroplane_wing.jpg",
+  "license": "CC BY-SA 4.0",
+  "author": "Farrah Zakir",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/Aeroplane_wing.jpg/960px-Aeroplane_wing.jpg"
+};
