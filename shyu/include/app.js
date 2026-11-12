@@ -1,7 +1,9 @@
 (()=>{
 const {screenDefs,types,districts,rows,notices,questions,programImages,spaceImages,mapPositions}=window.SHYU_DATA;
 
-const screens=screenDefs.map(([id,title])=>({id,title,summary:title}));
+// 사이트맵 ID는 보존하고 서버가 허용하는 단일 접두부 ID로 화면·Description을 연결합니다.
+const compatibleId=value=>value.replace(/^SH-([A-Z]+)-(\d{2})(.*)$/, 'SH$1-$2$3');
+const screens=screenDefs.map(([planningId,title])=>({id:compatibleId(planningId),planningId,title,summary:title}));
 window.GFAIR_SCREENS=[{name:'서울 독서행사',screens}];
 const id=n=>screens[n-1].id;
 const content=document.querySelector('#content'), dialog=document.querySelector('#reservation-dialog');
@@ -297,6 +299,7 @@ function draw(){
  let hash=location.hash.slice(1);
  const legacy=/^SH-LIB-(\d{2})$/.exec(hash);
  if(legacy&&Number(legacy[1])<=13){hash=id(Number(legacy[1]));history.replaceState(null,'',`#${hash}`)}
+ const compatible=compatibleId(hash);if(compatible!==hash){hash=compatible;history.replaceState(null,'',`#${hash}`)}
  const index=screens.findIndex(s=>s.id===hash),n=index<0?14:index+1;
  if(!hash){hash=id(14);history.replaceState(null,'',`#${hash}`)}
  document.body.dataset.screen=hash;

@@ -59,3 +59,7 @@ Google Sheets의 `2차 사이트맵`을 기준으로 구성한 사용자용 목�
 - https://operations.osmfoundation.org/policies/tiles/
 
 로컬 수정과 GitHub 배포는 별도 작업입니다. 이 파일을 저장하는 것만으로 GitHub에 배포되지 않습니다.
+
+## Description 화면 ID 호환
+
+서버 허용 형식에 맞춰 SH-HOME-01 → SHHOME-01처럼 실제 화면 ID를 변환합니다. 사이트맵 ID는 화면 정의의 planningId로 보존합니다. 기존 링크와 SH-LIB 주소는 새 ID로 자동 연결합니다. 다른 프로젝트·공통 서버·인증·저장 방식은 변경하지 않습니다.
