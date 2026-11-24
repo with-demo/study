@@ -1,3 +1,6 @@
 @echo off
-node "%~dp0include\preview.cjs"
+setlocal
+set "SHYU_PREVIEW_SCRIPT=%~dp0include\preview.cjs"
+"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -Command "$ErrorActionPreference='Stop'; $command=Get-Command node.exe -ErrorAction SilentlyContinue; $nodePath=$null; if($command){$nodePath=$command.Source}; if(-not $nodePath){$candidates=@(); foreach($base in @($env:ProgramFiles,${env:ProgramFiles(x86)})){if($base){$candidates+=Join-Path $base 'nodejs\node.exe'}}; if($env:LOCALAPPDATA){$candidates+=Join-Path $env:LOCALAPPDATA 'Programs\nodejs\node.exe'}; foreach($package in @(Get-AppxPackage -Name '*CodexPrimaryRuntime*' -ErrorAction SilentlyContinue | Sort-Object Version -Descending)){if($package.InstallLocation){$candidates+=Join-Path $package.InstallLocation 'dependencies\node\bin\node.exe'}}; $nodePath=$candidates | Where-Object {Test-Path -LiteralPath $_ -PathType Leaf} | Select-Object -First 1}; if(-not $nodePath){Write-Host 'Node.js was not found. Install Node.js LTS or update Codex, then try again.'; exit 1}; Write-Host 'Starting Bookieum local preview...'; $previewArgs=@($env:SHYU_PREVIEW_SCRIPT); if($env:SHYU_PREVIEW_NO_OPEN -eq '1'){$previewArgs+='--no-open'}; & $nodePath @previewArgs; exit $LASTEXITCODE"
 if errorlevel 1 pause
+endlocal

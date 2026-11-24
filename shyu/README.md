@@ -52,6 +52,7 @@ Google Sheets의 `2차 사이트맵`을 기준으로 구성한 사용자용 목�
 - 이미지 목록: include/data.js의 programImages / spaceImages. 출처: assets/images/SOURCES.md
 - 지도는 Leaflet + OpenStreetMap으로 바로 열리며, 키 입력·카카오맵 연결·외부 지도 이동 버튼을 제공하지 않습니다.
 - shyu 폴더의 ‘로컬 미리보기.cmd’를 더블클릭하면 지도 화면이 브라우저에서 열립니다. Node.js가 필요하며 현재 PC에는 설치되어 있습니다.
+- 실행 파일은 PATH와 일반 Node.js 설치 경로를 먼저 확인하고, 없으면 설치된 Codex 런타임의 Node.js를 찾습니다. PC별 고정 경로는 저장하지 않습니다. 모두 없으면 Node.js LTS 설치 또는 Codex 업데이트 안내를 표시합니다.
 - 실행 창을 열어 둔 상태로 http://localhost:8907/shyu/index.html 에서 모든 화면을 확인합니다. 창을 닫거나 Ctrl+C로 종료합니다. 외부 배포는 하지 않습니다.
 - 파일을 직접 여는 file:// 방식은 직접 타일 요청 대신 OpenStreetMap 공식 임베드 지도를 사용합니다. 공간 이름을 선택하면 해당 예시 위치의 마커를 표시합니다. 실제 기관 위치가 아닙니다.
 - 로컬 미리보기 또는 GitHub Pages에서는 Leaflet 지도에 모든 검색 결과 마커를 함께 표시합니다. 지도 영역 크기가 바뀌면 크기를 재계산하고, 화면 이동 시 지도 인스턴스를 정리합니다.
