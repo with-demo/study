@@ -9,7 +9,7 @@
   items.forEach(p=>{const button=document.createElement('button');button.type='button';button.dataset.place=p.key;button.textContent=p.place;button.addEventListener('click',()=>show(p));choices.append(button);});
   const selected=items.find(p=>p.key===activeKey)||items[0];
   container.classList.add('is-embedded');container.replaceChildren(frame,choices);show(selected);
-  const status=document.getElementById('map-status');if(status)status.textContent='공간 이름을 선택하면 실제 지도에서 예시 위치를 확인할 수 있어요. 아래 공간 카드에서 프로그램을 살펴보세요.';
+  const status=document.getElementById('map-status');if(status)status.textContent='공간 이름을 선택하면 지도에서 위치를 확인할 수 있어요. 아래 공간 카드에서 프로그램을 살펴보세요.';
  }
  function mount(container,items,activeKey,onSelect){
   unmount();
@@ -32,7 +32,7 @@
    const wrapper=document.createElement('div');wrapper.className='place-marker-body';
    const number=document.createElement('span');number.className='place-marker-number';number.textContent=String(i+1);wrapper.append(number,label);
    const icon=L.divIcon({className:'reading-place-marker',html:wrapper,iconSize:[180,40],iconAnchor:[90,40]});
-   const marker=L.marker(p.mapPosition,{icon,title:`${p.place} (예시 위치)`,alt:`${p.place} 프로그램 정보`,keyboard:true}).addTo(map);
+   const marker=L.marker(p.mapPosition,{icon,title:`${p.place}`,alt:`${p.place} 프로그램 정보`,keyboard:true}).addTo(map);
    const popup=document.createElement('div');popup.className='place-popup';
    const title=document.createElement('strong');title.textContent=p.place;
    const type=document.createElement('p');type.textContent=`${p.district} · ${p.type}`;
