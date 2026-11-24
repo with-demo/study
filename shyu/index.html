@@ -4,15 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="서울의 독서모임, 북토크, 도서관 프로그램을 탐색하는 예약 목업">
-  <title>서울 독서행사 · 독서 프로그램 예약</title>
+  <title>책이음 · 읽는 즐거움에서, 함께하는 즐거움으로</title>
   <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
   <link rel="stylesheet" href="style.css?v=20261112-description-id-fix">
+  <link rel="stylesheet" href="consumer.css?v=20261124-bookieum">
 </head>
 <body data-project="shyu" data-screen="SH-HOME-01">
   <div id="app">
     <header class="site-header">
       <div class="frame header-inner">
-        <a class="brand" href="#SH-HOME-01"><span aria-hidden="true">▤</span> 서울 독서행사</a>
+        <a class="brand" href="#SH-HOME-01"><svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true"><path d="m5 28 22-9 17 7-22 10L5 31Z" fill="#275a39"/><path d="m5 21 22-9 17 7-22 10L5 24Z" fill="#79a249"/><path d="m5 14 22-9 17 7-22 10L5 17Z" fill="#c5dc83"/><path d="m9 17 13 5 18-8v4L22 26 9 21Z" fill="#f2f6df"/></svg> 책이음</a>
         <nav aria-label="주 메뉴">
           <details class="nav-group"><summary>서비스 소개</summary><div class="nav-submenu"><a href="#SH-INTRO-01">서비스 안내</a><a href="#SH-GUIDE-01">이용 방법</a></div></details>
           <a href="#SH-PROG-01" data-nav="program">독서 프로그램</a>
@@ -25,15 +26,16 @@
       </div>
     </header>
     <main id="content" tabindex="-1"></main>
-    <footer class="site-footer"><div class="frame"><div class="footer-links"><a href="#SH-NOTICE-01">공지사항</a><a href="#SH-FAQ-01">자주묻는 질문</a><a href="#SH-MY-01">나의 예약내역</a><a href="../index.html">팀 프로젝트 목록</a></div><strong>서울 독서행사</strong><p>기획팀 스터디 화면 목업 · 프로그램·기관 정보는 예시이며 실제 접수가 이루어지지 않습니다.</p><small>SEOUL READING PROGRAMS</small></div></footer>
+    <footer class="site-footer"><div class="frame"><div class="footer-top"><a class="footer-brand" href="#SH-HOME-01">책이음<span>읽는 즐거움에서, 함께하는 즐거움으로</span></a><nav class="footer-links" aria-label="하단 안내"><button type="button" data-footer-policy="terms">이용약관</button><button type="button" data-footer-policy="privacy"><strong>개인정보처리방침</strong></button><a href="#SH-GUIDE-01">이용 방법</a><a href="#SH-FAQ-01">자주 묻는 질문</a></nav></div><div class="footer-bottom"><div><p>우리 동네 독서모임부터 글쓰기, 북토크까지.<br>나에게 맞는 책과의 만남을 찾아보세요.</p><p class="footer-disclosure">기획 스터디용 목업 · 프로그램과 공간은 예시입니다. 실제 신청·결제·이메일 발송은 이루어지지 않습니다.<br>실습 예약과 후기는 이용 중인 브라우저에만 저장됩니다.</p><small>© 책이음. Design study.</small></div><div class="footer-support"><strong>이용에 도움이 필요하신가요?</strong><a href="#SH-FAQ-01">자주 묻는 질문 확인</a><a href="#SH-NOTICE-01">공지사항</a><a href="../index.html">팀 프로젝트 목록</a></div></div></div></footer>
   </div>
   <dialog id="reservation-dialog" aria-labelledby="reservation-dialog-title"></dialog>
   <script src="../common/config.js?v=study-shared-20261104"></script>
   <script src="include/data.js?v=20261112-description-id-fix"></script>
-  <script src="include/views.js?v=20261112-description-id-fix"></script>
+  <script src="include/consumer-ui.js?v=20261124-bookieum"></script>
+  <script src="include/views.js?v=20261124-bookieum"></script>
   <script src="assets/vendor/leaflet/leaflet.js"></script>
   <script src="include/map.js?v=20261112-description-id-fix"></script>
-  <script src="include/app.js?v=20261112-description-id-fix"></script>
+  <script src="include/app.js?v=20261124-bookieum"></script>
   <script src="../common/include/collaboration.js?v=study-shared-20261104"></script>
   <script src="../common/include/spec-panel.js"></script>
   <script src="../common/include/annotations.js"></script>

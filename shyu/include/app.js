@@ -4,8 +4,9 @@ const {screenDefs,types,districts,rows,notices,questions,programImages,spaceImag
 // 사이트맵 ID는 보존하고 서버가 허용하는 단일 접두부 ID로 화면·Description을 연결합니다.
 const compatibleId=value=>value.replace(/^SH-([A-Z]+)-(\d{2})(.*)$/, 'SH$1-$2$3');
 const screens=screenDefs.map(([planningId,title])=>({id:compatibleId(planningId),planningId,title,summary:title}));
-window.GFAIR_SCREENS=[{name:'서울 독서행사',screens}];
+window.GFAIR_SCREENS=[{name:'책이음',screens}];
 const id=n=>screens[n-1].id;
+const {poster,breadcrumb,steps}=window.ShyuConsumerUI;
 const content=document.querySelector('#content'), dialog=document.querySelector('#reservation-dialog');
 
 
@@ -36,8 +37,9 @@ const go=n=>{if(location.hash===`#${id(n)}`)draw();else location.hash=id(n)};
 const page=(tag,title,body)=>{
  const guide=tag==='GUIDE',my=tag==='MY PAGE'||tag==='MY RESERVATIONS';
  const menus=guide?[[10,'공지사항'],[11,'자주 묻는 질문']]:my?[[6,'나의 예약 내역'],[12,'후기 작성'],[23,'나의 후기'],[25,'내 정보']]:tag==='ABOUT'||tag==='HOW TO USE'?[[15,'서비스 안내'],[16,'이용 방법']]:[];
- const tabs=menus.length?`<nav class="section-tabs" aria-label="${guide?'이용 안내':'마이페이지'} 하위 메뉴">${menus.map(([n,label])=>`<a href="#${id(n)}" ${location.hash.slice(1)===id(n)?'aria-current="page"':''}>${label}</a>`).join('')}</nav>`:'';
- return `<section class="frame page"><p class="eyebrow">${tag}</p><h1>${title}</h1>${tabs}${body}</section>`;
+ const tabs=menus.length?'<nav class="section-tabs" aria-label="하위 메뉴">'+menus.map(([n,label])=>'<a href="#'+id(n)+'" '+(location.hash.slice(1)===id(n)?'aria-current="page"':'')+'>'+label+'</a>').join('')+'</nav>':'';
+ const subtitle=tag==='PROGRAMS'?'우리 동네에서 열리는 책과의 만남을 찾아보세요.':my?'책과 함께할 일정과 나의 기록을 확인해 보세요.':tag==='RESERVATION'?'참여 정보를 확인하고 책과의 만남을 준비해 주세요.':'';
+ return '<section class="frame page page-'+tag.toLowerCase().replaceAll(' ','-')+'">'+breadcrumb(title)+'<div class="page-heading"><span class="heading-book" aria-hidden="true">'+(my||tag==='RESERVATION'?window.ShyuConsumerUI.bookMark:'')+'</span><h1>'+title+'</h1>'+(subtitle?'<p>'+subtitle+'</p>':'')+'</div>'+tabs+body+'</section>';
 };
 const empty=message=>`<p class="empty">${message}</p>`;
 function state(p){
@@ -65,9 +67,7 @@ function filterBar(){
 function photo(p,cls='card-art'){const image=cls.includes('space-art')?p.spaceImage:p.image;return `<div class="${cls} photo-art"><img src="assets/images/${image.file}" alt="${image.alt}（분위기 예시 사진）" style="object-position:${image.position}" loading="lazy" decoding="async"><span class="photo-caption">분위기 예시</span></div>`}
 function card(p){
  const s=state(p);
- return `<article class="card">${photo(p)}<div class="card-content">
- <span class="chip ${s.status==='접수 중'?'open':'closed'}">${s.status}</span><span class="chip">${s.progress}</span>
- <h3><a href="#${id(2)}" data-program="${p.key}">${p.name}</a></h3><p class="card-description">${p.description}</p><p>${timeLabel(s.start)} · ${p.district}</p><p class="muted">${p.type} · ${p.place}</p><p class="card-capacity">무료 · 잔여 ${Math.max(0,p.capacity-s.count)}명 <span>접수 ~ ${dateLabel(s.closes)}</span></p></div></article>`;
+ return '<article class="card"><a class="poster-link" data-program="'+p.key+'" href="#'+id(2)+'" aria-label="'+p.name+' 상세 보기">'+poster(p)+'</a><div class="card-content"><div class="card-badges"><span class="chip '+(s.status==='접수 중'?'open':'closed')+'">'+s.status+'</span><span class="card-type">'+p.type+'</span><span class="progress-label">'+s.progress+'</span></div><h3><a href="#'+id(2)+'" data-program="'+p.key+'">'+p.name+'</a></h3><p class="card-description">'+p.description+'</p><p class="card-date">'+timeLabel(s.start)+'</p><p class="muted">'+p.district+' · '+p.place+'</p><p class="card-capacity">무료 · 잔여 '+Math.max(0,p.capacity-s.count)+'명 <span>접수 ~ '+dateLabel(s.closes)+'</span></p></div></article>';
 }
 const cards=items=>items.length?`<div class="cards">${items.map(card).join('')}</div>`:empty('조건에 맞는 프로그램이 없습니다. 검색 조건을 변경해 보세요.');
 const hero=`<div class="hero"><div class="frame hero-inner"><div><p class="eyebrow">SEOUL READING PROGRAMS</p><h1>서울에서 만나는<br>책과 이야기</h1><p>독서모임, 작가와의 만남, 동네서점 북토크를 한곳에서 찾아보세요.</p></div>
@@ -91,27 +91,17 @@ function calendarView(items){
 const details=items=>`<dl class="details">${items.map(([label,value])=>`<dt>${label}</dt><dd>${escape(value)}</dd>`).join('')}</dl>`;
 const ownActive=p=>bookings.find(b=>b.key===p.key&&!b.cancelled);
 function detail(){
- const p=selected,s=state(p), booking=signedIn&&ownActive(p);
- return page('PROGRAM DETAILS',p.name,`<a class="back" href="#${id(1)}">← 프로그램 목록</a><div class="columns"><div class="stack">
- <section class="panel">${photo(p)}<h2>프로그램 소개</h2><p>${p.description}</p>${details([['유형',p.type],['대상','독서에 관심 있는 시민'],['운영 기관',p.place],['장소',`서울 ${p.district} · ${p.place}`],['이용 요금','무료']])}</section>
- <section class="panel"><div class="controls"><a class="button" data-space="${p.key}" href="#${id(18)}">공간 정보 보기</a>${link(19,'참여 이야기')}</div><h2>이용 후기</h2>${reviewBlock(p)}</section></div>
- <aside class="panel"><span class="chip ${s.reason?'closed':'open'}">${s.status}</span><span class="chip">${s.progress}</span><h2>신청 안내</h2>${details([['행사 일시',`${timeLabel(s.start)} ~ 16:00`],['접수 기간',`${timeLabel(s.opens)} ~ ${timeLabel(s.closes)}`],['접수 현황',`${s.count} / ${p.capacity}명`],['잔여 정원',`${Math.max(0,p.capacity-s.count)}명`]])}
- ${booking?`<a class="button primary" data-booking="${booking.ref}" href="#${id(7)}">내 예약 보기</a>`:`<button class="button primary" data-action="apply" ${s.reason?'disabled':''}>${s.reason||'예약 신청'}</button>`}
- ${s.reason?`<p class="muted">${s.reason}으로 신청할 수 없습니다.</p>`:''}</aside></div>`);
+ const p=selected,s=state(p),booking=signedIn&&ownActive(p);
+ const applyButton=booking?'<a class="button primary" data-booking="'+booking.ref+'" href="#'+id(7)+'">내 예약 보기</a>':'<button class="button primary" data-action="apply" '+(s.reason?'disabled':'')+'>'+(s.reason||'신청하기')+'</button>';
+ return '<section class="frame page detail-page">'+breadcrumb('독서 프로그램 · 프로그램 상세')+'<div class="detail-hero">'+poster(p,true)+'<div class="detail-summary"><div class="detail-topline"><span>'+p.type+'</span><span class="chip '+(s.reason?'closed':'open')+'">'+s.status+'</span></div><h1>'+p.name+'</h1><p class="detail-lead">읽는 즐거움에서, 함께하는 즐거움으로</p><p class="detail-description">'+p.description+'</p>'+details([['행사 일시',timeLabel(s.start)+' ~ 16:00'],['장소',p.place+' · '+p.district],['대상','독서에 관심 있는 시민'],['참가비','무료'],['잔여 정원',Math.max(0,p.capacity-s.count)+'명'],['접수 기간',dateLabel(s.opens)+' ~ '+dateLabel(s.closes)]])+'<div class="detail-actions">'+applyButton+link(1,'목록으로')+'</div>'+(s.reason?'<p class="muted">'+s.reason+'으로 신청할 수 없습니다.</p>':'')+'<p class="mock-caption">실습용 프로그램 · 실제 접수가 이루어지지 않습니다.</p></div></div><nav class="detail-tabs" aria-label="상세 내용 바로가기"><button data-scroll="program-intro">프로그램 소개</button><button data-scroll="program-place">일정·장소</button><button data-scroll="program-reviews">참여 후기</button><button data-scroll="program-policy">신청 안내</button></nav><div class="detail-body"><div><section class="editorial-section" id="program-intro"><div class="intro-split"><div><h2>책을 덮은 뒤,<br><em>이야기가 시작됩니다</em></h2><p>'+p.description+'</p><p>책을 사이에 두고 생각과 감상을 나누는 시간.<br>나에게 맞는 책과의 만남을 준비해 보세요.</p></div>'+photo(p)+'</div><div class="detail-facts"><section><h3>프로그램 정보</h3>'+details([['유형',p.type],['운영 기관',p.place],['진행 상태',s.progress]])+'</section><section><h3>함께하는 시간</h3><p>'+timeLabel(s.start)+' ~ 16:00</p><p class="muted">참여 전 접수기간과 장소를 확인해 주세요.</p></section></div></section><section class="editorial-section" id="program-place"><h2>만나는 공간</h2>'+photo(p,'space-art large')+'<h3>'+p.place+'</h3><p>'+address(p)+'</p><a class="text-link" data-space="'+p.key+'" href="#'+id(18)+'">공간 정보 살펴보기</a></section><section class="editorial-section" id="program-reviews"><div class="result-heading"><h2>참여자의 이야기</h2>'+link(19,'후기 전체 보기','text-link')+'</div>'+reviewBlock(p)+'</section><section class="editorial-section policy-section" id="program-policy"><h2>신청 전 확인해 주세요</h2><ul><li>신청 가능 여부는 접수기간과 잔여 정원에 따라 달라집니다.</li><li>예약 취소는 행사 시작 전까지 나의 예약 내역에서 할 수 있습니다.</li><li>같은 프로그램은 중복 신청할 수 없습니다.</li></ul>'+note()+'</section></div><aside class="booking-sticky"><span class="eyebrow">책과 함께할 다음 일정</span><strong>'+timeLabel(s.start)+'</strong><p>'+p.place+'</p>'+applyButton+'</aside></div></section>';
 }
 const login=()=>page('ACCOUNT','로그인',signedIn?`<div class="panel"><p>실습 회원으로 로그인되어 있습니다.</p>${link(6,'나의 예약 확인')}${link(28,'로그아웃')}</div>`:`<div class="account-layout"><form id="reading-login" class="panel form-panel" novalidate><h2>다시 만나 반가워요</h2><p>책과 함께하는 다음 일정을 준비해 보세요.</p><label class="field">아이디<input name="account" autocomplete="off" placeholder="실습 아이디를 입력하세요" required></label><label class="field">비밀번호<input name="password" type="password" autocomplete="off" placeholder="실제 비밀번호는 입력하지 마세요" required></label><p class="error" id="login-error" role="alert"></p><button class="button primary">로그인</button><div class="account-links">${link(21,'회원가입','text-link')}${link(22,'아이디·비밀번호 찾기','text-link')}</div><p class="muted">입력 검증을 연습하는 가상 로그인입니다. 입력값은 저장하지 않습니다.</p></form><aside class="panel"><h2>화면을 먼저 둘러보세요</h2><p>실제 계정 없이 예약과 후기 흐름을 확인할 수 있습니다.</p><button class="button" data-action="demo-login">실습 회원으로 바로 시작</button><p class="muted">예시 예약 2건이 제공됩니다. 실제 신청은 이루어지지 않습니다.</p></aside></div>`);
 function gated(message){return `<div class="panel"><p>${message}</p><button class="button primary" data-action="login">로그인</button></div>`}
 function application(){
- if(!signedIn)return page('RESERVATION','예약 신청서',`${applicationPreview()}${gated('아래와 같은 신청서를 작성합니다. 계속하려면 실습 로그인이 필요합니다.')}`);
- const s=state(selected);
- if(ownActive(selected)||s.reason)return page('RESERVATION','예약 신청서',`<div class="panel"><p>${ownActive(selected)?'이미 신청한 프로그램입니다.':s.reason}</p>${link(2,'상세로 돌아가기')}</div>`);
- return page('RESERVATION','예약 신청서',`<form class="panel form-panel" id="reading-application" novalidate>
- <h2>${selected.name}</h2><p>${timeLabel(s.start)} · ${selected.place}</p><p class="muted">실제 개인정보 대신 실습용 정보를 입력해 주세요.</p>
- <label class="field">신청자 이름 (필수)<input name="name" maxlength="40" required aria-describedby="name-error" placeholder="예: 실습 참가자"></label><p class="error" id="name-error" role="alert"></p>
- <label class="field">휴대전화 (필수)<input name="phone" inputmode="numeric" maxlength="11" required pattern="010[0-9]{8}" aria-describedby="phone-error" placeholder="01000000000"></label><p class="error" id="phone-error" role="alert"></p>
- <label class="field">이메일 (필수)<input name="email" type="email" maxlength="100" required aria-describedby="email-error" placeholder="reader@example.test"></label><p class="error" id="email-error" role="alert"></p>
- <label class="check"><input type="checkbox" name="agree" required aria-describedby="agree-error"> 실습용 입력값을 이 브라우저에 임시 저장하는 데 동의합니다. (필수)</label><p class="error" id="agree-error" role="alert"></p>
- <p class="error" id="submit-error" role="alert"></p><div class="controls">${link(2,'상세로 돌아가기')}<button class="button primary">제출 내용 확인</button></div></form>`);
+ if(!signedIn)return page('RESERVATION','책과의 만남, 신청해 볼까요?',applicationPreview()+gated('신청서를 작성하려면 실습 로그인이 필요합니다.'));
+ const p=selected,s=state(p);
+ if(ownActive(p)||s.reason)return page('RESERVATION','예약 신청서','<div class="panel"><p>'+(ownActive(p)?'이미 신청한 프로그램입니다.':s.reason)+'</p>'+link(2,'상세로 돌아가기')+'</div>');
+ return page('RESERVATION','책과의 만남, 신청해 볼까요?',steps()+'<div class="application-layout"><form class="application-form" id="reading-application" novalidate><div class="form-section-heading"><h2>신청자 정보</h2><span>필수 항목 *</span></div><p class="mock-caption">실제 개인정보 대신 실습용 정보를 입력해 주세요.</p><label class="field">신청자 이름 *<input name="name" maxlength="40" required aria-describedby="name-error" placeholder="예: 실습 참가자"></label><p class="error" id="name-error" role="alert"></p><label class="field">휴대전화 *<input name="phone" inputmode="numeric" maxlength="11" required pattern="010[0-9]{8}" aria-describedby="phone-error phone-help" placeholder="01000000000"></label><p class="field-help" id="phone-help">010으로 시작하는 숫자 11자리를 입력해 주세요.</p><p class="error" id="phone-error" role="alert"></p><label class="field">이메일 *<input name="email" type="email" maxlength="100" required aria-describedby="email-error" placeholder="reader@example.test"></label><p class="error" id="email-error" role="alert"></p><div class="participation-count"><strong>참여 인원</strong><p>본인 1명</p></div><section class="application-policy"><h2>신청 전 확인해 주세요</h2><ul><li>행사 시작 전까지 예약을 취소할 수 있어요.</li><li>같은 프로그램은 중복 신청할 수 없어요.</li></ul></section><section class="consent-panel"><h3>실습 데이터 저장 안내</h3><p>이름·이메일·예약 정보는 이 브라우저에 임시 저장됩니다. 실제 예약이나 개인정보 수집 서비스가 아닙니다.</p><label class="check"><input type="checkbox" name="agree" required aria-describedby="agree-error"> 실습용 입력값을 이 브라우저에 임시 저장하는 데 동의합니다. (필수)</label><p class="error" id="agree-error" role="alert"></p></section><p class="info-box">아래 버튼을 누르면 신청 내용을 한 번 더 확인할 수 있어요.</p><p class="error" id="submit-error" role="alert"></p><div class="form-actions">'+link(2,'이전으로')+'<button class="button primary">제출 내용 확인</button></div><p class="form-help">신청이 어려우신가요? '+link(11,'자주 묻는 질문','text-link')+'</p></form><aside class="application-summary"><h2>신청할 프로그램</h2>'+poster(p)+'<h3>'+p.name+'</h3><span class="chip">'+p.type+'</span>'+details([['일시',timeLabel(s.start)],['장소',p.place],['참가비','무료'],['참여 인원','1명']])+link(2,'프로그램 상세 보기','text-link')+'</aside></div>');
 }
 const programFor=b=>programs.find(p=>p.key===b?.key);
 function receipt(b){
@@ -125,7 +115,10 @@ function completion(){
 function myList(){
  if(!signedIn)return page('MY RESERVATIONS','나의 예약 내역',gated('가상 로그인 후 내 예약을 확인할 수 있습니다.'));
  const items=bookings.filter(b=>programFor(b)&&(!myStatus||(myStatus==='cancelled'?b.cancelled:!b.cancelled))&&(!myFrom||localDate(state(programFor(b)).start)>=myFrom)&&(!myTo||localDate(state(programFor(b)).start)<=myTo));
- return page('MY RESERVATIONS','나의 예약 내역',`<form id="my-filter" class="panel controls"><label class="field">행사 시작일<input type="date" name="from" value="${myFrom}"></label><label class="field">행사 종료일<input type="date" name="to" value="${myTo}"></label><label class="field">예약 상태<select name="status"><option value="">전체</option><option value="active" ${myStatus==='active'?'selected':''}>예약 완료</option><option value="cancelled" ${myStatus==='cancelled'?'selected':''}>취소</option></select></label><button class="button primary">조회</button><button class="button" type="button" data-action="my-reset">초기화</button></form><p class="list-summary">전체 ${items.length}건 · 실습 예약</p>${items.length?`<div class="stack">${[...items].reverse().map(b=>{const p=programFor(b);return `<article class="panel"><span class="chip ${b.cancelled?'closed':'open'}">${b.cancelled?'취소':'예약 완료'}</span><h2><a href="#${id(7)}" data-booking="${b.ref}">${p.name}</a></h2><p>예약번호 ${b.ref}</p><p>신청일 ${dateLabel(new Date(b.created))} · 행사일 ${timeLabel(dateAt(p.offset,14))}</p>${reviewEligible(b)?`<a class="button" href="#${id(reviewWritten(b)?23:12)}" data-review-booking="${b.ref}">${reviewWritten(b)?'작성한 후기 보기':'이용 후기 작성'}</a>`:''}</article>`}).join('')}</div>`:`${empty('조건에 맞는 예약이 없습니다.')}${link(1,'프로그램 찾기','button primary')}`}`);
+ const upcoming=bookings.filter(b=>programFor(b)&&!b.cancelled&&state(programFor(b)).start>new Date()).sort((a,b)=>state(programFor(a)).start-state(programFor(b)).start)[0];
+ const feature=upcoming?'<section class="next-meeting"><span class="meeting-symbol" aria-hidden="true">'+window.ShyuConsumerUI.bookMark+'</span><div><p>가장 가까운 만남</p><h2>'+dateLabel(state(programFor(upcoming)).start)+', '+programFor(upcoming).place+'에서 만나요</h2><span>'+programFor(upcoming).name+' · 14:00–16:00</span></div><a class="button" href="#'+id(7)+'" data-booking="'+upcoming.ref+'">예약 상세 보기</a></section>':'';
+ const list=items.length?'<div class="reservation-list">'+[...items].reverse().map(b=>{const p=programFor(b),ended=state(p).progress==='종료';return '<article class="reservation-row">'+poster(p)+'<div><span class="chip '+(b.cancelled?'closed':'open')+'">'+(b.cancelled?'취소':ended?'행사 종료 · 예약 완료':'예약 완료')+'</span><h2><a href="#'+id(7)+'" data-booking="'+b.ref+'">'+p.name+'</a></h2><p>'+timeLabel(state(p).start)+' ~ 16:00</p><p>'+p.place+'</p><p class="reservation-meta">예약번호 '+escape(b.ref)+' · 신청일 '+dateLabel(new Date(b.created))+'</p>'+(b.cancelledAt?'<p class="reservation-meta">취소일 '+dateLabel(new Date(b.cancelledAt))+'</p>':'')+'</div><div class="reservation-actions"><a class="button" href="#'+id(7)+'" data-booking="'+b.ref+'">예약 상세</a>'+(reviewEligible(b)?'<a class="button primary" href="#'+id(reviewWritten(b)?23:12)+'" data-review-booking="'+b.ref+'">'+(reviewWritten(b)?'작성한 후기 보기':'이용 후기 작성')+'</a>':'')+'</div></article>';}).join('')+'</div>':empty('조건에 맞는 예약이 없습니다.');
+ return page('MY RESERVATIONS','나의 예약 내역',feature+'<form id="my-filter" class="my-filters"><label class="field">행사 시작일<input type="date" name="from" value="'+myFrom+'"></label><label class="field">행사 종료일<input type="date" name="to" value="'+myTo+'"></label><label class="field">예약 상태<select name="status"><option value="">전체</option><option value="active" '+(myStatus==='active'?'selected':'')+'>예약 완료</option><option value="cancelled" '+(myStatus==='cancelled'?'selected':'')+'>취소</option></select></label><button class="button primary">조회</button><button class="button" type="button" data-action="my-reset">초기화</button></form><p class="list-summary">예약 <strong>'+items.length+'건</strong> · 실습 예약</p>'+list+'<p class="info-box">예약 취소는 행사 시작 전까지 예약 상세에서 할 수 있어요.</p><div class="next-program"><div><h2>다음에는 어떤 책으로 만날까요?</h2><p>책이음에서 새로운 만남을 찾아보세요.</p></div>'+link(1,'새로운 프로그램 찾기','button')+'</div>');
 }
 const canCancel=b=>!b.cancelled&&new Date()<dateAt(programFor(b).offset,14);
 function bookingDetail(){
@@ -286,7 +279,7 @@ function memberSubmit(form){
 }
 function logoutView(){if(signedIn){signedIn=false;sessionStorage.removeItem('shyu.reading.login');selectedBooking=null;}return page('ACCOUNT','로그아웃되었습니다',`<section class="panel"><p>다음 책과의 만남에서 다시 만나요.</p><div class="controls">${link(14,'홈으로','button primary')}${link(3,'로그인')}</div></section>`)}
 
-const {home,introduction,usage}=window.createShyuViews({hero,page,link,cards,programs,state,notices,id,types,note});
+const {home,introduction,usage}=window.createShyuViews({hero,page,link,cards,programs,state,notices,id,types,note,poster,photo,dateLabel,timeLabel});
 
 const specs=[
  ['apply-confirm',4,'예약 신청 확인','레이어 컨펌','필수 입력값이 유효한 상태에서 제출 내용 확인 선택','입력한 정보로 예약을 신청할까요?','접수 조건을 재확인하고 저장 성공 시 신청 완료 화면으로 이동','신청서 입력을 유지합니다.'],
@@ -306,7 +299,7 @@ function draw(){
  document.querySelector('#account-link').textContent=signedIn?'로그아웃':'로그인';
  const currentGroup=n===9?'calendar':[19,20].includes(n)?'review':[1,2,4,5].includes(n)?'program':'';
  document.querySelectorAll('[data-nav]').forEach(a=>a.setAttribute('aria-current',a.dataset.nav===currentGroup?'page':'false'));
- document.title=`${hash==='screens'?'화면검색':screens[n-1].title} · 서울 독서행사`;
+ document.title=`${hash==='screens'?'화면검색':screens[n-1].title} · 책이음`;
  if(hash==='screens'){
   const items=screens.filter(s=>`${s.id} ${s.title}`.toLowerCase().includes(search.toLowerCase()));
   content.innerHTML=page('SCREEN INDEX','화면검색',`<form id="reading-screen-search" class="controls"><label>화면 ID 또는 이름 <input name="q" value="${escape(search)}"></label><button class="button">검색</button></form><ul>${items.map(s=>`<li><a href="#${s.id}">${s.id} · ${s.title}</a></li>`).join('')}</ul>${items.length?'':empty('검색 결과가 없습니다.')}`);
@@ -317,7 +310,7 @@ function draw(){
  if(n===8){const items=programs.filter(p=>p.place.includes(spaceFilters.q)&&(!spaceFilters.district||p.district===spaceFilters.district)&&(!spaceFilters.type||placeType(p)===spaceFilters.type));window.ShyuMap?.mount(document.getElementById('reading-map'),items,selectedSpace,key=>{selectedSpace=key;go(18)});}
  if(n===9){const head=content.querySelector('.cal-head');head?.insertAdjacentHTML('afterend','<button type="button" class="button today-button" data-action="today">오늘</button>')}
  if(n===12){const form=content.querySelector('#reading-review');form?.querySelector('label:nth-of-type(2)')?.insertAdjacentHTML('beforebegin',field('후기 제목 (필수)','title'));}
- if(n===4&&signedIn&&content.querySelector('#reading-application'))content.querySelector('#reading-application').insertAdjacentHTML('beforebegin','<ol class="stepper"><li class="active">01 신청서 작성</li><li>02 내용 확인</li><li>03 신청 완료</li></ol>');
+
 }
 content.addEventListener('submit',event=>{
  const form=event.target;event.preventDefault();
@@ -350,6 +343,7 @@ document.querySelector('.site-header').addEventListener('click',event=>{
 content.addEventListener('click',event=>{
  const control=event.target.closest('button,a');if(!control)return;
  const {program,booking,action,pin,day,month:monthStep,notice,status}=control.dataset;
+ if(control.dataset.scroll){document.getElementById(control.dataset.scroll)?.scrollIntoView({behavior:'smooth',block:'start'});return;}
  if(action==='demo-login'){signInDemo();return}
  if(action==='space-reset'){spaceFilters={q:'',type:'',district:''};draw()}
  if(action==='my-reset'){myStatus='';myFrom='';myTo='';draw()}
@@ -381,6 +375,12 @@ content.addEventListener('click',event=>{
    selectedBooking=cancelled;draw();content.focus();
   },'예약 취소');
  }
+});
+document.querySelector('.site-footer').addEventListener('click',event=>{
+ const key=event.target.closest('[data-footer-policy]')?.dataset.footerPolicy;if(!key)return;
+ const privacy=key==='privacy';dialog.dataset.screenId=id(14)+(privacy?'-p04':'-p03');
+ dialog.innerHTML='<div class="dialog-title"><h2 id="reservation-dialog-title">'+(privacy?'개인정보처리방침 · 목업 안내':'이용약관 · 목업 안내')+'</h2><button type="button" data-close aria-label="안내 팝업 닫기">×</button></div><p>'+(privacy?'이 사이트는 기획 실습용 화면입니다. 실제 개인정보 대신 가상 정보를 사용해 주세요. 실습 회원정보·예약·후기는 사용 중인 브라우저에 저장되며 다른 기기와 공유되지 않습니다. 내 정보의 회원 탈퇴에서 실습 데이터를 삭제할 수 있습니다. 상단 기획 도구의 GitHub 인증과 설명 공동 저장은 별도의 기능입니다.':'프로그램·공간·일정은 실습용 예시이며 실제 예약·결제·이메일 발송이 이루어지지 않습니다. 예약은 무료·본인 1인 기준이며 행사 시작 전 취소할 수 있습니다. 실제 운영 서비스의 이용약관은 운영 주체와 정책이 정해진 후 별도로 작성합니다.')+'</p><button type="button" class="primary" data-close>확인</button>';
+ dialog.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>dialog.close());dialog.showModal();
 });
 let lastHash=location.hash;
 content.addEventListener('input',event=>{if(event.target.closest('#reading-application,#reading-review,#edit-review,[id^="member-"]'))editDirty=true;});
