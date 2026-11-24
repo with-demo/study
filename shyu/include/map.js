@@ -1,11 +1,22 @@
 /* 키 입력 없이 표시하는 지도. 현재 보이는 범위의 타일만 요청합니다. */
 (()=>{
- let currentMap=null;
+ let currentMap=null,resizeObserver=null;
+ function unmount(){if(resizeObserver){resizeObserver.disconnect();resizeObserver=null;}if(currentMap){currentMap.remove();currentMap=null;}}
+ function embedded(container,items,activeKey,onSelect){
+  const frame=document.createElement('iframe');frame.className='embedded-reading-map';frame.title='독서 공간 실제 지도 · OpenStreetMap';frame.loading='eager';
+  const choices=document.createElement('div');choices.className='embedded-place-choices';choices.setAttribute('aria-label','지도에서 확인할 공간');
+  const show=p=>{const point=p?.mapPosition;const bbox=point?[point[1]-.055,point[0]-.035,point[1]+.055,point[0]+.035]:[126.85,37.46,127.17,37.66];const query=new URLSearchParams({bbox:bbox.join(','),layer:'mapnik'});if(point)query.set('marker',point.join(','));frame.src='https://www.openstreetmap.org/export/embed.html?'+query;choices.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.place===p?.key)));};
+  items.forEach(p=>{const button=document.createElement('button');button.type='button';button.dataset.place=p.key;button.textContent=p.place;button.addEventListener('click',()=>show(p));choices.append(button);});
+  const selected=items.find(p=>p.key===activeKey)||items[0];
+  container.classList.add('is-embedded');container.replaceChildren(frame,choices);show(selected);
+  const status=document.getElementById('map-status');if(status)status.textContent='공간 이름을 선택하면 실제 지도에서 예시 위치를 확인할 수 있어요. 아래 공간 카드에서 프로그램을 살펴보세요.';
+ }
  function mount(container,items,activeKey,onSelect){
-  if(currentMap){currentMap.remove();currentMap=null;}
+  unmount();
   if(!container)return;
   const status=document.getElementById('map-status'),say=text=>{if(status)status.textContent=text;};
-  if(!window.L){say('지도 파일을 불러오지 못했습니다. 아래 공간 목록을 이용해 주세요.');return;}
+  if(location.protocol==='file:'||!window.L){embedded(container,items,activeKey,onSelect);return;}
+  container.classList.remove('is-embedded');
   const map=L.map(container,{scrollWheelZoom:false,zoomControl:true}).setView([37.565,126.99],11);currentMap=map;
   map.attributionControl.setPrefix('<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>');
   if(['http:','https:'].includes(location.protocol)){
@@ -13,7 +24,7 @@
    let loaded=0;
    tiles.on('tileload',()=>{loaded++;say(items.length?'마커를 선택해 프로그램을 확인하세요.':'조건에 맞는 공간이 없습니다.');});
    tiles.on('tileerror',()=>{if(!loaded)say('지도 배경을 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.');});
-  }else{say('지도 배경은 shyu 폴더의 ‘로컬 미리보기.cmd’를 실행하면 표시됩니다. 현재는 예시 장소 마커를 보여드립니다.');}
+  }
   const bounds=[];
   items.forEach((p,i)=>{
    bounds.push(p.mapPosition);
@@ -32,6 +43,8 @@
   if(bounds.length>1)map.fitBounds(bounds,{padding:[90,65],maxZoom:12});
   else if(bounds.length===1)map.setView(bounds[0],13);
   if(!items.length)say('조건에 맞는 공간이 없습니다. 검색 조건을 변경해 주세요.');
+  requestAnimationFrame(()=>{if(currentMap===map)map.invalidateSize({pan:false});});
+  if(window.ResizeObserver){resizeObserver=new ResizeObserver(()=>{if(currentMap===map)map.invalidateSize({pan:false});});resizeObserver.observe(container);}
  }
- window.ShyuMap={mount};
+ window.ShyuMap={mount,unmount};
 })();
