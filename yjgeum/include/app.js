@@ -20,7 +20,6 @@ const esc = (value = "") => String(value).replace(/[&<>"']/g, (char) => ({
 const dateISO = (date) => [date.getFullYear(), String(date.getMonth() + 1).padStart(2, "0"), String(date.getDate()).padStart(2, "0")].join("-");
 const today = new Date();
 const offset = (days) => dateISO(new Date(today.getFullYear(), today.getMonth(), today.getDate() + days));
-const year = today.getFullYear();
 const demo = "가상 행복시의 시연 데이터입니다. 실제 개인정보나 서류를 입력하지 마세요.";
 const groups = {
   center: ["소개", [["center", "청년센터 소개"], ["history", "법인소개 및 연혁"], ["org", "조직도"], ["directions", "오시는길"]]],
@@ -405,13 +404,78 @@ function centerIntro() {
     </div>`, "center");
 }
 
+function foundation() {
+  const values = [
+    ["성장", "배움과 실무 경험을 통해 청년이 자신의 가능성을 발견하도록 돕습니다.", '<path d="M4 19l6-7 4 3 6-9m-5 0h5v5"/>'],
+    ["연결", "청년과 지역 기관을 잇고, 함께 기획하고 활동할 기회를 만듭니다.", '<circle cx="12" cy="5" r="3"/><circle cx="5" cy="18" r="3"/><circle cx="19" cy="18" r="3"/><path d="m10 8-4 7m8-7 4 7M8 18h8"/>'],
+    ["동행", "청년의 목소리를 듣고, 고민을 나눌 수 있는 상담과 지원을 이어갑니다.", '<path d="M12 21S3 15 3 9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6-9 12-9 12Z"/>']
+  ];
+  const milestones = [
+    ["2026", [["09", "청년 교류 네트워크를 생활권별로 확대"], ["03", "청년정보 ON 통합 플랫폼 개설"]]],
+    ["2025", [["10", "직무 탐색·포트폴리오 프로그램 개설"], ["05", "청년 마음건강 상담 지원 시작"], ["01", "행복시 청년센터 시범 운영 개시"]]],
+    ["2024", [["12", "청년센터 다목적실과 스터디실 조성"], ["04", "지역 청년지원 기관과 업무협약 체결"]]],
+    ["2023", [["11", "청년센터 조성 기본계획 수립"], ["06", "청년 활동 공간 수요 조사 실시"]]],
+    ["2022", [["10", "청년 주거·일자리 정책 안내 창구 운영"], ["04", "청년 동아리 활동비 지원 시작"]]],
+    ["2021", [["09", "청년 자치 프로젝트 공모 시작"], ["03", "온라인 진로 멘토링 운영"]]],
+    ["2020", [["11", "청년 생활 실태 조사 실시"], ["06", "온라인 청년정책 안내 서비스 개설"]]],
+    ["2019", [["09", "지역 청년 네트워크 발족"], ["03", "취업 준비 교육 및 멘토링 시범 운영"]]],
+    ["2018", [["09", "행복시 청년지원재단 출범"], ["06", "재단 법인 설립 허가"]]]
+  ];
+
+  return page("법인소개 및 연혁", "행복시 청년지원재단의 설립 목적과 걸어온 길을 소개합니다.",
+    `<div class="foundation">
+      <nav class="foundation-nav" aria-label="법인소개 및 연혁 바로가기">
+        ${button("foundation-jump", "법인 소개", "secondary", "foundation-about")}
+        ${button("foundation-jump", "주요 연혁", "secondary", "foundation-history")}
+      </nav>
+      <section class="foundation-hero" aria-labelledby="foundation-about">
+        <div>
+          <p>행복시 청년지원재단</p>
+          <h2 id="foundation-about" tabindex="-1">청년의 가능성이<br>지역의 미래가 되도록</h2>
+          <p>청년이 지역에서 배우고 일하며<br>자신의 길을 찾을 수 있도록 함께합니다.</p>
+        </div>
+      </section>
+      <section class="foundation-about">
+        <h2>청년과 함께하는<br>든든한 동반자</h2>
+        <div>
+          <p>행복시 청년지원재단은 청년의 자립과 성장, 사회참여를 지원하기 위해 2018년에 설립된 가상의 공익재단입니다.</p>
+          <p>청년정책과 현장을 연결하고, 교육·일자리·마음건강·교류 프로그램을 운영합니다. 청년이 필요한 정보를 찾고 지역 안에서 새로운 기회를 만날 수 있도록 돕습니다.</p>
+        </div>
+      </section>
+      <dl class="foundation-purpose">
+        <div><dt>설립 목적</dt><dd>청년의 자립 기반을 마련하고 사회참여 기회를 넓힙니다.</dd></div>
+        <div><dt>비전</dt><dd>청년이 꿈꾸고 도전하며 함께 성장하는 행복시를 만듭니다.</dd></div>
+      </dl>
+      <section class="foundation-values" aria-labelledby="foundation-values">
+        <h2 id="foundation-values">우리가 추구하는 가치</h2>
+        <div class="foundation-value-list">
+          ${values.map(([title, description, graphic]) => `<article>
+            <svg viewBox="0 0 24 24" aria-hidden="true">${graphic}</svg>
+            <h3>${title}</h3><p>${description}</p>
+          </article>`).join("")}
+        </div>
+      </section>
+      <section class="foundation-history" aria-labelledby="foundation-history">
+        <h2 id="foundation-history" tabindex="-1">청년과 함께 걸어온 길</h2>
+        <p>2018년 설립부터 이어온 가상의 주요 이력입니다.</p>
+        <div class="foundation-filters" role="group" aria-label="연혁 연도 선택">
+          ${chips(["전체", ...milestones.map(([date]) => date)], "전체", "foundation-filter")}
+        </div>
+        <ol class="foundation-timeline" role="list">
+          ${milestones.map(([date, events]) => `<li data-foundation-year="${date}">
+            <h3>${date}</h3>
+            <ul role="list">${events.map(([month, event]) => `<li><time datetime="${date}-${month}">${Number(month)}월</time><span>${event}</span></li>`).join("")}</ul>
+          </li>`).join("")}
+        </ol>
+      </section>
+    </div>`, "center");
+}
+
 function center(kind) {
   if (kind === "org") return organization();
   if (kind === "directions") return directions();
   if (kind === "center") return centerIntro();
-  return page(labels[kind], "청년의 일상을 돕는 행복시 청년센터입니다.", '<div class="panel"><h2>법인소개 및 연혁</h2>' +
-    '<p>' + year + '년 행복시 청년센터 시범 운영 및 청년정보 ON 통합 서비스 개설</p>' +
-    '<div class="actions">' + linkTo("space", "공간 안내 및 예약", "primary") + linkTo("directions", "오시는길", "secondary") + '</div></div>');
+  return foundation();
 }
 function calendar(kind, params) {
   const raw = params.get("month") || "";
@@ -644,6 +708,20 @@ document.addEventListener("click", async (event) => {
   const item = items.find((entry) => entry.id === id);
   const record = state.records.find((entry) => entry.id === id);
   switch (action) {
+    case "foundation-jump":
+      document.getElementById(id).focus({ preventScroll: true });
+      document.getElementById(id).scrollIntoView();
+      break;
+    case "foundation-filter": {
+      const history = target.closest(".foundation-history");
+      history.querySelectorAll("[data-action=foundation-filter]").forEach((filter) => {
+        filter.setAttribute("aria-pressed", filter === target);
+      });
+      history.querySelectorAll("[data-foundation-year]").forEach((entry) => {
+        entry.hidden = id !== "전체" && entry.dataset.foundationYear !== id;
+      });
+      break;
+    }
     case "map-zoom": {
       const map = target.closest(".directions-map-view");
       const level = Math.max(1, Math.min(3, Number(map.dataset.zoom) + (id === "in" ? 1 : -1)));

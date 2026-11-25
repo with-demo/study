@@ -605,3 +605,184 @@ body{background:#fff}#app{font-size:16px;color:#15243b;line-height:1.55}#app [hi
     order: 0;
   }
 }
+
+#app .foundation {
+  display: grid;
+  gap: clamp(24px, 4cqi, 44px);
+  line-height: 1.7;
+}
+
+#app .foundation h2 {
+  color: var(--navy);
+  font-size: clamp(25px, 3.2cqi, 36px);
+  line-height: 1.25;
+}
+
+#app .foundation-nav,
+#app .foundation-purpose,
+#app .foundation-about,
+#app .foundation-value-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+#app .foundation-nav button {
+  font-size: 15px;
+  background: var(--pale);
+  border-color: var(--line);
+}
+
+#app .foundation-nav button:hover {
+  border-color: var(--blue);
+}
+
+#app .foundation-hero {
+  display: grid;
+  align-items: center;
+  min-height: clamp(290px, 35cqi, 410px);
+  padding: clamp(22px, 5cqi, 60px);
+  border-radius: var(--radius);
+  background: linear-gradient(90deg, #eaf6ff 4%, #eaf6fff2 30%, #eaf6ff00 69%),
+    #eaf6ff url("foundation-hero.webp") right center / cover no-repeat;
+}
+
+#app .foundation-hero h2 {
+  margin: 8px 0 14px;
+  font-size: clamp(31px, 4.2cqi, 51px);
+}
+
+#app .foundation-hero p:first-child,
+#app .foundation-value-list svg {
+  color: #08756e;
+}
+
+#app .foundation-hero p:first-child {
+  font-weight: 800;
+}
+
+#app .foundation [tabindex="-1"] {
+  scroll-margin-top: calc(var(--sb-toolbar-height, 70px) + 16px);
+}
+
+#app .foundation-about {
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: clamp(12px, 4cqi, 48px);
+}
+
+#app .foundation-purpose {
+  margin: 0;
+}
+
+#app .foundation-purpose > div {
+  padding: 18px;
+  background: var(--pale);
+  border-top: 3px solid var(--blue);
+}
+
+#app .foundation-purpose > div + div {
+  border-color: #08756e;
+}
+
+#app .foundation-values {
+  padding: clamp(16px, 4cqi, 40px);
+  border-radius: var(--radius);
+  background: var(--pale);
+}
+
+#app .foundation-values h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+#app .foundation-value-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+#app .foundation-value-list article {
+  padding: clamp(14px, 2.3cqi, 24px);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: white;
+  text-align: center;
+}
+
+#app .foundation-value-list svg {
+  width: 30px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+#app .foundation-value-list h3 {
+  margin: 6px 0;
+}
+
+#app .foundation-filters {
+  margin: 18px 0;
+}
+
+#app .foundation-timeline,
+#app .foundation-timeline ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#app .foundation-timeline > li {
+  display: grid;
+  grid-template-columns: clamp(66px, 13cqi, 118px) 1fr;
+}
+
+#app .foundation-timeline h3 {
+  margin: 0;
+  color: var(--blue);
+  font-size: clamp(21px, 4cqi, 36px);
+  line-height: 1.2;
+}
+
+#app .foundation-timeline ul {
+  position: relative;
+  padding: 0 0 22px clamp(12px, 3cqi, 32px);
+  border-left: 1px solid #ccd9ea;
+}
+
+#app .foundation-timeline ul::before {
+  content: "";
+  position: absolute;
+  top: 7px;
+  left: -5px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #08756e;
+}
+
+#app .foundation-timeline ul > li {
+  display: grid;
+  grid-template-columns: 2.7em 1fr;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+#app .foundation-timeline time {
+  color: var(--blue);
+  font-weight: 800;
+}
+
+@container (max-width: 680px) {
+  #app .foundation-about,
+  #app .foundation-purpose,
+  #app .foundation-value-list {
+    grid-template-columns: 1fr;
+  }
+
+  #app .foundation-hero {
+    align-items: end;
+    min-height: 370px;
+    background: linear-gradient(0deg, #eaf6ff 0%, #eaf6fff5 33%, #eaf6ff00 75%),
+      #eaf6ff url("foundation-hero.webp") 75% top / cover no-repeat;
+  }
+}
