@@ -253,11 +253,35 @@ function postDetail(post) {
     (post.kind === "video" ? '<details class="callout"><summary>영상 안내 대본</summary><p>청년센터 예약 메뉴에서 공간을 선택합니다. 이용일과 시간을 고르고 신청서를 저장합니다. 마이페이지에서 접수 내역을 확인합니다.</p></details>' : "") +
     '<div class="actions">' + linkTo(post.kind, "목록으로", "secondary") + button("print", "인쇄") + '</div></div>', "board");
 }
+function organization() {
+  const teams = [
+    ["정책지원팀", ["청년정책 안내 및 참여 사업 운영", "일자리·주거 지원사업 접수"]],
+    ["프로그램운영팀", ["교육·강연 및 교류 프로그램 운영", "마음건강 상담 접수 및 연계"]],
+    ["공간운영팀", ["청년센터 시설 관리 및 대관", "물품 대여 및 방문 안내"]]
+  ];
+
+  return page("조직도", "행복시 청년센터의 가상 조직 구성과 팀별 담당 업무입니다.",
+    `<section class="panel org-chart" aria-labelledby="org-chart-title">
+      <h2 id="org-chart-title">행복시 청년센터</h2>
+      <div class="org-lead">
+        <h3>센터장</h3>
+        <p>센터 운영 및 사업 총괄</p>
+      </div>
+      <ul class="org-teams" role="list">
+        ${teams.map(([name, duties]) => `<li class="org-team">
+          <div class="org-team-card">
+            <h3>${esc(name)}</h3>
+            <ul>${duties.map((duty) => `<li>${esc(duty)}</li>`).join("")}</ul>
+          </div>
+        </li>`).join("")}
+      </ul>
+    </section>`, "center");
+}
 function center(kind) {
+  if (kind === "org") return organization();
   const text = {
     center: ["청년을 위한 배움과 교류의 공간", "행복시 청년센터는 취업 준비, 교육, 상담, 커뮤니티 활동을 지원합니다."],
     history: ["법인소개 및 연혁", year + "년 행복시 청년센터 시범 운영 및 청년정보 ON 통합 서비스 개설"],
-    org: ["조직도", "센터장 · 정책지원팀 · 프로그램운영팀 · 공간운영팀"],
     directions: ["오시는길", "행복시 행복동 청년로 1(가상) · 행복역 2번 출구에서 도보 8분 · 청년센터 정류장 하차"]
   }[kind];
   return page(labels[kind], "청년의 일상을 돕는 행복시 청년센터입니다.", '<div class="panel"><h2>' + text[0] +

@@ -28,3 +28,135 @@ body{background:#fff}#app{font-size:16px;color:#15243b;line-height:1.55}#app [hi
 @container(max-width:680px){#app .logo-image{width:170px}}
 @media(max-width:360px){#app .logo-image{width:140px}}
 @container(max-width:360px){#app .logo-image{width:140px}}
+
+#app .org-chart {
+  --org-connector: #8296b8;
+  padding: clamp(20px, 4%, 44px);
+}
+
+#app .org-chart > h2 {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+#app .org-lead {
+  position: relative;
+  width: min(100%, 236px);
+  margin: 0 auto 24px;
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--navy);
+  color: white;
+  text-align: center;
+}
+
+#app .org-lead::after,
+#app .org-team::before,
+#app .org-team::after {
+  content: "";
+  position: absolute;
+  background: var(--org-connector);
+}
+
+#app .org-lead::after,
+#app .org-team::before {
+  left: 50%;
+  width: 1px;
+  height: 24px;
+}
+
+#app .org-lead::after {
+  top: 100%;
+}
+
+#app .org-teams {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+#app .org-team {
+  position: relative;
+  display: flex;
+  padding: 24px 8px 0;
+}
+
+#app .org-team::before,
+#app .org-team::after {
+  top: 0;
+}
+
+#app .org-team::after {
+  inset-inline: 0;
+  height: 1px;
+}
+
+#app .org-team:first-child::after {
+  inset-inline-start: 50%;
+}
+
+#app .org-team:last-child::after {
+  inset-inline-end: 50%;
+}
+
+#app .org-team-card {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+#app .org-team-card h3 {
+  padding: 12px;
+  background: var(--pale);
+  color: var(--navy);
+  text-align: center;
+}
+
+#app .org-team-card ul {
+  margin: 0;
+  padding: 14px 14px 14px 32px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+#app .org-team-card li + li {
+  margin-top: 5px;
+}
+
+@container (max-width: 680px) {
+  #app .org-lead {
+    margin: 0;
+  }
+
+  #app .org-lead::after {
+    left: 16px;
+  }
+
+  #app .org-teams {
+    grid-template-columns: 1fr;
+  }
+
+  #app .org-team {
+    padding: 12px 0 0 36px;
+  }
+
+  #app .org-team::before {
+    left: 16px;
+    height: 100%;
+  }
+
+  #app .org-team:last-child::before {
+    height: 36px;
+  }
+
+  #app .org-team::after,
+  #app .org-team:first-child::after,
+  #app .org-team:last-child::after {
+    inset: 36px auto auto 16px;
+    width: 20px;
+  }
+}
