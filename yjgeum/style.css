@@ -451,7 +451,11 @@ body{background:#fff}#app{font-size:16px;color:#15243b;line-height:1.55}#app [hi
 #app .center-intro-hero h2 {
   margin: 8px 0 12px;
   color: white;
-  font-size: clamp(36px, 4.5cqi, 42px);
+  font-size: clamp(36px, 4.8cqi, 56px);
+}
+
+#app .center-intro-hero h2 span {
+  color: #adf4ea;
 }
 
 #app .center-intro-services > h2 {
@@ -477,7 +481,6 @@ body{background:#fff}#app{font-size:16px;color:#15243b;line-height:1.55}#app [hi
   place-items: center;
   width: 42px;
   height: 42px;
-  margin-bottom: 10px;
   border-radius: 50%;
   background: #dce9ff;
   color: var(--blue);
@@ -497,18 +500,28 @@ body{background:#fff}#app{font-size:16px;color:#15243b;line-height:1.55}#app [hi
   stroke-linejoin: round;
 }
 
-#app .center-intro-service h3 a,
-#app .center-intro-service > a {
+#app .center-intro-service-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+#app .center-intro-service-heading h3 {
+  margin: 0;
+  font-size: clamp(20px, 2.1cqi, 25px);
+  line-height: 1.25;
+}
+
+#app .center-intro-service h3 a {
   color: var(--blue);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
 #app .center-intro-service > a {
-  display: inline-block;
-  margin-top: 5px;
+  margin-top: 14px;
   font-size: 14px;
-  font-weight: 700;
 }
 
 #app .center-intro-story {
@@ -527,6 +540,39 @@ body{background:#fff}#app{font-size:16px;color:#15243b;line-height:1.55}#app [hi
   aspect-ratio: 2.15;
   object-fit: cover;
   border-radius: 10px;
+}
+
+#app .center-intro-story-support {
+  background: #edf7f5;
+}
+
+#app .center-intro-story-support img {
+  order: -1;
+}
+
+#app .center-intro-story .center-intro-label {
+  margin-bottom: 6px;
+  color: #08756e;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+#app .center-intro-story h2 {
+  font-size: clamp(26px, 3.5cqi, 38px);
+}
+
+#app .center-intro-story h2::after {
+  content: "";
+  display: block;
+  width: 32px;
+  height: 3px;
+  margin-top: 12px;
+  background: #08756e;
+}
+
+#app .center-intro-story p {
+  font-size: 17px;
 }
 
 #app .center-intro-story a {
@@ -553,5 +599,9 @@ body{background:#fff}#app{font-size:16px;color:#15243b;line-height:1.55}#app [hi
 
   #app .center-intro-hero::after {
     background: linear-gradient(90deg, #102848f5, #102848b8 68%, #10284880);
+  }
+
+  #app .center-intro-story-support img {
+    order: 0;
   }
 }

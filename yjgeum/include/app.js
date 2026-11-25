@@ -359,7 +359,7 @@ function centerIntro() {
         <img src="center-lounge.webp" alt="" fetchpriority="high">
         <div class="center-intro-hero-copy">
           <p>행복시 청년센터</p>
-          <h2 id="center-intro-title">청년의 내일을<br>함께 만드는 공간</h2>
+          <h2 id="center-intro-title"><span>청년의 내일</span>을<br>함께 만드는 공간</h2>
           <p>모임부터 새로운 배움, 마음건강 상담까지 필요한 순간에 함께합니다.</p>
         </div>
       </section>
@@ -367,28 +367,40 @@ function centerIntro() {
         <h2 id="center-intro-services">청년센터에서 무엇을 할 수 있나요?</h2>
         <div class="center-intro-service-list">
           ${services.map(([route, title, description, graphic]) => `<article class="center-intro-service">
-            <span class="center-intro-icon" aria-hidden="true"><svg viewBox="0 0 24 24">${graphic}</svg></span>
-            <h3>${linkTo(route, title)}</h3>
+            <div class="center-intro-service-heading">
+              <span class="center-intro-icon" aria-hidden="true"><svg viewBox="0 0 24 24">${graphic}</svg></span>
+              <h3>${linkTo(route, title)}</h3>
+            </div>
             <p>${description}</p>
-            ${route === "counsel" ? linkTo("policy", "청년정책 찾아보기") : ""}
+            ${route === "counsel" ? linkTo("policy", "청년정책 찾아보기", "primary") : ""}
           </article>`).join("")}
         </div>
       </section>
       <section class="center-intro-story" aria-labelledby="center-intro-space">
-        <img src="center-classroom.webp" alt="창가를 따라 책상과 의자가 놓인 교육실" loading="lazy">
         <div>
-          <h2 id="center-intro-space">함께 성장하는 공간</h2>
-          <p>스터디실에서는 면접을 준비하거나 소규모 모임을 열 수 있어요. 다목적실은 강연과 워크숍, 팀 프로젝트에 활용할 수 있습니다.</p>
+          <p class="center-intro-label" lang="en">Learning &amp; Community</p>
+          <h2 id="center-intro-space">배움과 교류가 시작되는 공간</h2>
+          <p>스터디실에서 면접을 준비하거나 관심사가 비슷한 청년들과 소규모 모임을 열어보세요. 다목적실에서는 강연과 워크숍에 참여하고 팀 프로젝트도 진행할 수 있습니다.</p>
+          <p>처음 방문한다면 프로그램 목록에서 포트폴리오 교육이나 원데이 클래스 일정을 살펴보세요.</p>
           ${linkTo("space", "센터 공간 살펴보기", "secondary")}
+          ${linkTo("program", "프로그램 알아보기", "secondary")}
         </div>
+        <img src="center-classroom.webp" alt="창가를 따라 책상과 의자가 놓인 교육실" loading="lazy">
+      </section>
+      <section class="center-intro-story center-intro-story-support" aria-labelledby="center-intro-support">
+        <div>
+          <p class="center-intro-label" lang="en">Counseling &amp; Support</p>
+          <h2 id="center-intro-support">혼자 고민할 때 함께하는 곳</h2>
+          <p>취업이나 주거 문제로 무엇부터 시작해야 할지 막막하다면 청년정책에서 내 상황에 맞는 정보를 찾아보세요. 지원사업별로 신청 대상과 접수 기간을 확인할 수 있습니다.</p>
+          <p>일상의 고민을 이야기하고 싶을 때는 마음건강 상담 메뉴에서 희망 일정을 선택할 수 있습니다.</p>
+          ${linkTo("support", "지원사업 알아보기", "secondary")}
+          ${linkTo("counsel", "마음건강 상담 안내", "secondary")}
+        </div>
+        <img src="center-exterior.webp" alt="나무가 늘어선 길에서 바라본 청년센터 입구" loading="lazy">
       </section>
       <section class="center-intro-visit" aria-labelledby="center-intro-visit-title">
         <h2 id="center-intro-visit-title">청년센터 방문 안내</h2>
         ${details([...centerHours, ["위치", centerAddress]])}
-        <div class="actions">
-          ${linkTo("rental-calendar", "공간 예약하기", "primary")}
-          ${linkTo("directions", "오시는길", "secondary")}
-        </div>
       </section>
     </div>`, "center");
 }
