@@ -168,10 +168,15 @@ body{background:#fff}#app{font-size:16px;color:#15243b;line-height:1.55}#app [hi
 }
 
 #app .directions-info {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  align-items: start;
 }
 
-#app .directions-address,
+#app .directions-address {
+  color: var(--ink);
+  font-weight: 700;
+}
+
 #app .directions-map figcaption {
   color: var(--muted);
 }
@@ -185,8 +190,59 @@ body{background:#fff}#app{font-size:16px;color:#15243b;line-height:1.55}#app [hi
   min-height: 240px;
   height: clamp(240px, 38cqi, 400px);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  overflow: hidden;
+}
+
+#app .directions-map-image {
+  position: absolute;
+  inset: 0;
   background: #f0f2ec url("directions-map.svg") center / cover no-repeat;
+  transform-origin: 54% 38%;
+}
+
+#app .directions-map-view[data-zoom="2"] .directions-map-image {
+  transform: scale(1.35);
+}
+
+#app .directions-map-view[data-zoom="3"] .directions-map-image {
+  transform: scale(1.8);
+}
+
+#app .directions-zoom {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: grid;
+  border: 1px solid #a9b5c2;
+  border-radius: 3px;
+  background: white;
+  box-shadow: 0 2px 6px #132e6126;
+}
+
+#app .directions-zoom button {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  color: var(--ink);
+  font-size: 20px;
+  line-height: 1;
+}
+
+#app .directions-zoom button + button {
+  border-top: 1px solid var(--line);
+}
+
+#app .directions-zoom button:enabled:hover {
+  background: var(--pale);
+}
+
+#app .directions-zoom button:disabled {
+  color: var(--muted);
+  cursor: default;
+  opacity: .65;
 }
 
 #app .directions-map figcaption {
@@ -236,20 +292,75 @@ body{background:#fff}#app{font-size:16px;color:#15243b;line-height:1.55}#app [hi
 }
 
 #app .directions-transit {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 12px;
-  margin: 16px 0 0;
+  margin-top: 16px;
 }
 
-#app .directions-transit dd {
-  margin: 0;
+#app .directions-mode {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 12px;
+}
+
+#app .directions-mode + .directions-mode {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+#app .directions-mode-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--pale);
+  color: var(--blue);
+}
+
+#app .directions-mode-icon svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+#app .directions-mode h3 {
+  margin: 0 0 4px;
+  font-size: 15px;
+}
+
+#app .directions-stop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  color: var(--navy);
+}
+
+#app .directions-line {
+  padding: 2px 6px;
+  border-radius: 12px;
+  background: #087744;
+  color: white;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+#app .directions-mode .directions-walk {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 14px;
 }
 
 #app .directions-buses {
-  padding: 0;
-  margin: 8px 0 0;
+  padding: 9px 12px;
+  margin: 10px 0 0;
   list-style: none;
+  border-radius: 6px;
+  background: var(--pale);
+  font-size: 14px;
 }
 
 #app .directions-buses b {
@@ -257,9 +368,13 @@ body{background:#fff}#app{font-size:16px;color:#15243b;line-height:1.55}#app [hi
   margin-right: 4px;
   padding: 1px 6px;
   border-radius: 4px;
-  background: var(--pale);
-  color: var(--navy);
+  background: #20653e;
+  color: white;
   font-size: 13px;
+}
+
+#app .directions-buses li:first-child b {
+  background: var(--blue);
 }
 
 #app .directions-buses li + li {
