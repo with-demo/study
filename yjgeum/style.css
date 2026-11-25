@@ -922,3 +922,7 @@ body{background:#fff}#app{font-size:16px;color:#15243b;line-height:1.55}#app [hi
       #eaf6ff url("foundation-hero.webp") 75% top / cover no-repeat;
   }
 }
+
+.ui-spec-panel .intro-screen-specs > .annotation-screen-overview {
+  display: block;
+}
