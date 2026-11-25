@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 420">
+  <rect width="1000" height="420" fill="#f0f2ec"/>
+  <path d="M0 0h260l23 92-47 80H0Zm719 229 281-21v212H716l-36-76Z" fill="#d6eccc"/>
+  <path d="M0 328c160-44 236 24 380 60 134 33 248-21 363-49 94-23 176-12 257 12v69H0Z" fill="#c6e7f4"/>
+  <path d="M0 97 1000 25M0 237l1000 24M127 0l40 322M285 0l63 354M643 0l-51 377M823 0l-59 334M0 148l310-8 170 53 520-57" fill="none" stroke="#d7ddd5" stroke-width="14"/>
+  <path d="M0 97 1000 25M0 237l1000 24M127 0l40 322M285 0l63 354M643 0l-51 377M823 0l-59 334M0 148l310-8 170 53 520-57" fill="none" stroke="#fff" stroke-width="11"/>
+  <path d="M-10 296 433 237l111-57 466 18M481-10l19 220-30 220" fill="none" stroke="#ddd7c7" stroke-width="27"/>
+  <path d="M-10 296 433 237l111-57 466 18M481-10l19 220-30 220" fill="none" stroke="#fff9dd" stroke-width="23"/>
+  <path d="M508 173h67v-54h-67z" fill="#d9e9ff" stroke="#cadbf1"/>
+  <g font-family="sans-serif" font-size="16" fill="#536356">
+    <text x="102" y="60">행복근린공원</text>
+    <text x="780" y="302">온빛공원</text>
+    <text x="217" y="387">행복천</text>
+    <text x="527" y="304">청년로</text>
+  </g>
+  <g font-family="sans-serif" font-size="16" font-weight="bold" fill="#324457" stroke="#fff" stroke-width="4" paint-order="stroke">
+    <circle cx="364" cy="245" r="9" fill="#079552" stroke-width="2"/>
+    <text x="321" y="226">행복역 2번 출구</text>
+    <circle cx="638" cy="184" r="9" fill="#2864c7" stroke-width="2"/>
+    <text x="652" y="180">청년센터 정류장</text>
+  </g>
+</svg>
