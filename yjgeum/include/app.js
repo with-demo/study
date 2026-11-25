@@ -254,27 +254,54 @@ function postDetail(post) {
     '<div class="actions">' + linkTo(post.kind, "목록으로", "secondary") + button("print", "인쇄") + '</div></div>', "board");
 }
 function organization() {
-  const teams = [
-    ["정책지원팀", ["청년정책 안내 및 참여 사업 운영", "일자리·주거 지원사업 접수"]],
-    ["프로그램운영팀", ["교육·강연 및 교류 프로그램 운영", "마음건강 상담 접수 및 연계"]],
-    ["공간운영팀", ["청년센터 시설 관리 및 대관", "물품 대여 및 방문 안내"]]
+  const divisions = [
+    ["청년사업본부", "청년정책 및 성장지원 사업", [
+      ["정책지원팀", ["청년정책 발굴", "정책 정보 제공", "지원사업 운영", "청년 참여 활성화"]],
+      ["일자리성장팀", ["취업·창업 지원", "진로 및 역량 개발", "일자리 정보 연계", "청년 자립 지원"]],
+      ["문화복지팀", ["문화교류 사업", "마음건강 지원", "청년 커뮤니티 운영", "생활복지 연계"]]
+    ]],
+    ["운영협력본부", "경영지원 및 지역사회 연계", [
+      ["경영지원팀", ["인사 및 총무", "예산·회계 관리", "성과 및 평가 관리", "행정업무 지원"]],
+      ["공간운영팀", ["시설 및 안전관리", "공간 예약·대관", "물품 대여 관리", "방문자 이용 안내"]],
+      ["대외협력팀", ["유관기관 협력", "지역 네트워크 운영", "홍보 및 콘텐츠 제작", "온라인 플랫폼 운영"]]
+    ]]
   ];
+  const committees = [["청년운영위원회", "정책 제안 및 운영 자문"]];
+  const teams = divisions.flatMap(([, , divisionTeams]) => divisionTeams);
+  const dutiesCount = teams.reduce((count, [, duties]) => count + duties.length, 0);
+  const totals = [["본부", divisions.length], ["전담팀", teams.length],
+    ["운영위원회", committees.length], ["주요 담당업무", dutiesCount]];
 
   return page("조직도", "행복시 청년센터의 가상 조직 구성과 팀별 담당 업무입니다.",
     `<section class="panel org-chart" aria-labelledby="org-chart-title">
-      <h2 id="org-chart-title">행복시 청년센터</h2>
+      <h2 id="org-chart-title">행복시 청년센터 조직도</h2>
       <div class="org-lead">
         <h3>센터장</h3>
         <p>센터 운영 및 사업 총괄</p>
       </div>
-      <ul class="org-teams" role="list">
-        ${teams.map(([name, duties]) => `<li class="org-team">
-          <div class="org-team-card">
-            <h3>${esc(name)}</h3>
-            <ul>${duties.map((duty) => `<li>${esc(duty)}</li>`).join("")}</ul>
-          </div>
+      <div class="org-management">
+        <div class="org-director">
+          <h3>사무국장</h3>
+          <p>사업 조정 및 조직 관리</p>
+        </div>
+        ${committees.map(([name, role]) => `<div class="org-committee"><h3>${name}</h3><p>${role}</p></div>`).join("")}
+      </div>
+      <ul class="org-divisions org-branches" role="list">
+        ${divisions.map(([name, role, divisionTeams]) => `<li class="org-division">
+          <div class="org-division-title"><h3>${name}</h3><p>${role}</p></div>
+          <ul class="org-teams org-branches" role="list">
+            ${divisionTeams.map(([team, duties]) => `<li class="org-team">
+              <div class="org-team-card">
+                <h4>${team}</h4>
+                <ul>${duties.map((duty) => `<li>${duty}</li>`).join("")}</ul>
+              </div>
+            </li>`).join("")}
+          </ul>
         </li>`).join("")}
       </ul>
+      <dl class="org-summary">
+        ${totals.map(([label, count]) => `<div><dt>${label}</dt><dd>${count}</dd></div>`).join("")}
+      </dl>
     </section>`, "center");
 }
 const centerAddress = "행복시 행복동 청년로 1 (가상 주소)";
