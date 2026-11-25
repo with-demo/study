@@ -160,3 +160,119 @@ body{background:#fff}#app{font-size:16px;color:#15243b;line-height:1.55}#app [hi
     width: 20px;
   }
 }
+
+#app .directions,
+#app .directions-info {
+  display: grid;
+  gap: 16px;
+}
+
+#app .directions-info {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#app .directions-address,
+#app .directions-map figcaption {
+  color: var(--muted);
+}
+
+#app .directions-map {
+  margin: 16px 0 0;
+}
+
+#app .directions-map-view {
+  position: relative;
+  min-height: 240px;
+  height: clamp(240px, 38cqi, 400px);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #f0f2ec url("directions-map.svg") center / cover no-repeat;
+}
+
+#app .directions-map figcaption {
+  margin-top: 8px;
+  font-size: 13px;
+}
+
+#app .directions-marker {
+  position: absolute;
+  left: 54%;
+  top: 38%;
+  transform: translate(-50%, -100%);
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+}
+
+#app .directions-marker span {
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: white;
+  box-shadow: 0 2px 9px #132e6133;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+#app .directions-marker i {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  transform: rotate(-45deg);
+  border: 2px solid white;
+  border-radius: 50% 50% 50% 0;
+  background: #087f58;
+  box-shadow: 0 2px 6px #132e6140;
+}
+
+#app .directions-marker i::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
+}
+
+#app .directions-transit {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  margin: 16px 0 0;
+}
+
+#app .directions-transit dd {
+  margin: 0;
+}
+
+#app .directions-buses {
+  padding: 0;
+  margin: 8px 0 0;
+  list-style: none;
+}
+
+#app .directions-buses b {
+  display: inline-block;
+  margin-right: 4px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--pale);
+  color: var(--navy);
+  font-size: 13px;
+}
+
+#app .directions-buses li + li {
+  margin-top: 4px;
+}
+
+#app .directions-info .details {
+  grid-template-columns: 1fr;
+  margin-bottom: 0;
+}
+
+@container (max-width: 680px) {
+  #app .directions-info {
+    grid-template-columns: 1fr;
+  }
+}

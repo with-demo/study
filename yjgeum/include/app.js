@@ -277,17 +277,61 @@ function organization() {
       </ul>
     </section>`, "center");
 }
+const centerHours = [
+  ["운영시간", "평일 09:00~21:00 / 토요일 09:00~18:00"],
+  ["휴관일", "일요일 및 공휴일"]
+];
+
+function directions() {
+  return page("오시는길", "행복시 청년센터 위치와 방문 정보를 확인하세요.",
+    `<div class="directions">
+      <section class="panel" aria-labelledby="directions-location">
+        <h2 id="directions-location">행복시 청년센터</h2>
+        <p class="directions-address">행복시 행복동 청년로 1 (가상 주소)</p>
+        <figure class="directions-map">
+          <div class="directions-map-view" aria-hidden="true">
+            <div class="directions-marker">
+              <span>행복시 청년센터</span><i></i>
+            </div>
+          </div>
+          <figcaption>가상 지도 · 역, 정류장, 도로는 위치 안내를 위한 예시입니다.</figcaption>
+        </figure>
+      </section>
+      <div class="directions-info">
+        <section class="panel" aria-labelledby="directions-transit">
+          <h2 id="directions-transit">대중교통</h2>
+          <dl class="directions-transit">
+            <dt>지하철</dt>
+            <dd><strong>2호선 행복역</strong> 2번 출구에서 도보 8분</dd>
+            <dt>버스</dt>
+            <dd><strong>청년센터 정류장</strong> 하차 후 도보 2분
+              <ul class="directions-buses">
+                <li><b>간선</b> 120번, 152번</li>
+                <li><b>지선</b> 2211번, 2312번</li>
+                <li><b>마을</b> 행복03번</li>
+              </ul>
+            </dd>
+          </dl>
+        </section>
+        <section class="panel" aria-labelledby="directions-hours">
+          <h2 id="directions-hours">이용 안내</h2>
+          ${details([...centerHours, ["연락처", "02-000-0000 (가상 번호)"]])}
+        </section>
+      </div>
+    </div>`, "center");
+}
+
 function center(kind) {
   if (kind === "org") return organization();
+  if (kind === "directions") return directions();
   const text = {
     center: ["청년을 위한 배움과 교류의 공간", "행복시 청년센터는 취업 준비, 교육, 상담, 커뮤니티 활동을 지원합니다."],
-    history: ["법인소개 및 연혁", year + "년 행복시 청년센터 시범 운영 및 청년정보 ON 통합 서비스 개설"],
-    directions: ["오시는길", "행복시 행복동 청년로 1(가상) · 행복역 2번 출구에서 도보 8분 · 청년센터 정류장 하차"]
+    history: ["법인소개 및 연혁", year + "년 행복시 청년센터 시범 운영 및 청년정보 ON 통합 서비스 개설"]
   }[kind];
   return page(labels[kind], "청년의 일상을 돕는 행복시 청년센터입니다.", '<div class="panel"><h2>' + text[0] +
-    '</h2><p>' + text[1] + '</p>' + (["center", "directions"].includes(kind) ?
+    '</h2><p>' + text[1] + '</p>' + (kind === "center" ?
       '<div class="map" role="img" aria-label="행복시 청년센터 위치를 나타낸 가상 약도"><span>◆ 행복시 청년센터</span></div>' +
-      details([["운영시간", "평일 09:00~21:00 / 토요일 09:00~18:00"], ["휴관일", "일요일 및 공휴일"]]) : "") +
+      details(centerHours) : "") +
     '<div class="actions">' + linkTo("space", "공간 안내 및 예약", "primary") + linkTo("directions", "오시는길", "secondary") + '</div></div>');
 }
 function calendar(kind, params) {
