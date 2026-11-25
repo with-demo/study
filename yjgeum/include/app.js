@@ -129,8 +129,9 @@ function rewriteLinks(root=document.getElementById('app')){
 function screenList(){return '<section class="sb-screen-list"><h1>행복시 청년정보 ON · 화면검색</h1><p>화면을 선택하고 상단 Description을 열어 스토리보드를 작성하세요. 서비스 로그인은 시연용이며, 설명 저장은 GitHub 편집 권한이 필요합니다.</p><label>화면 ID 또는 화면명<input id="sb-screen-query" type="search" placeholder="예: PRG, 프로그램, 예약"></label><div class="grid">'+screens.map(s=>'<a class="card" data-screen-entry href="?#'+s.id+'"><small>'+s.id+' · '+esc(s.group||'공통')+'</small><h3>'+esc(s.title)+'</h3></a>').join('')+'</div></section>';}
 document.addEventListener('input',e=>{if(e.target.id==='sb-screen-query'){const q=e.target.value.trim().toLowerCase();main.querySelectorAll('[data-screen-entry]').forEach(a=>a.hidden=!a.textContent.toLowerCase().includes(q));}});
 function page(title, description, content, parent) {
-  return '<div class="pagehero"><div class="wrap"><p class="crumb"><a href="#home">홈</a>　/　' +
-    (parent ? linkTo(parent, groups[parent]?.[0] || labels[parent]) + "　/　" : "") + esc(title) + '</p><h1>' +
+  const separator = ' <span aria-hidden="true">&gt;</span> ';
+  return '<div class="pagehero"><div class="wrap"><p class="crumb"><a href="#home">홈</a>' + separator +
+    (parent ? linkTo(parent, groups[parent]?.[0] || labels[parent]) + separator : "") + esc(title) + '</p><h1>' +
     esc(title) + '</h1><p class="subtext">' + esc(description) + '</p></div></div><div class="page wrap">' + content + '</div>';
 }
 function chips(values, current, action) {
@@ -341,17 +342,46 @@ function directions() {
     </div>`, "center");
 }
 
+function centerIntro() {
+  return page("청년센터 소개", "행복시 청년센터를 소개합니다.",
+    `<div class="center-intro">
+      <section class="center-intro-hero" aria-labelledby="center-intro-title">
+        <h2 id="center-intro-title">청년의 내일을 함께 만드는<br>행복시 청년센터</h2>
+        <img src="center-lounge.webp" alt="밝은 라운지에서 이야기를 나누는 청년들">
+      </section>
+      <section class="center-intro-story">
+        <div>
+          <h2>배움과 교류가 시작되는 공간</h2>
+          <p>관심 있는 분야를 배우고, 비슷한 고민을 가진 또래를 만날 수 있는 열린 공간입니다.</p>
+          <p>교육과 강연에 참여하거나 스터디실과 다목적실을 예약해 작은 모임을 열어보세요.</p>
+        </div>
+        <img src="center-classroom.webp" alt="창가를 따라 책상과 의자가 놓인 교육실" loading="lazy">
+      </section>
+      <section class="center-intro-story center-intro-story-reversed">
+        <div>
+          <h2>혼자 고민할 때 함께하는 곳</h2>
+          <p>취업 준비나 일상이 막막할 때 필요한 청년정책과 지원사업을 찾아볼 수 있습니다.</p>
+          <p>마음건강 상담과 프로그램을 통해 지금 필요한 도움을 만나보세요.</p>
+        </div>
+        <img src="center-exterior.webp" alt="나무가 늘어선 길에서 바라본 청년센터 입구" loading="lazy">
+      </section>
+      <section class="center-intro-visit" aria-labelledby="center-intro-visit-title">
+        <h2 id="center-intro-visit-title">청년센터 방문 안내</h2>
+        ${details(centerHours)}
+        <div class="actions">
+          ${linkTo("space", "공간 안내 및 예약", "primary")}
+          ${linkTo("directions", "오시는길", "secondary")}
+        </div>
+      </section>
+    </div>`, "center");
+}
+
 function center(kind) {
   if (kind === "org") return organization();
   if (kind === "directions") return directions();
-  const text = {
-    center: ["청년을 위한 배움과 교류의 공간", "행복시 청년센터는 취업 준비, 교육, 상담, 커뮤니티 활동을 지원합니다."],
-    history: ["법인소개 및 연혁", year + "년 행복시 청년센터 시범 운영 및 청년정보 ON 통합 서비스 개설"]
-  }[kind];
-  return page(labels[kind], "청년의 일상을 돕는 행복시 청년센터입니다.", '<div class="panel"><h2>' + text[0] +
-    '</h2><p>' + text[1] + '</p>' + (kind === "center" ?
-      '<div class="map" role="img" aria-label="행복시 청년센터 위치를 나타낸 가상 약도"><span>◆ 행복시 청년센터</span></div>' +
-      details(centerHours) : "") +
+  if (kind === "center") return centerIntro();
+  return page(labels[kind], "청년의 일상을 돕는 행복시 청년센터입니다.", '<div class="panel"><h2>법인소개 및 연혁</h2>' +
+    '<p>' + year + '년 행복시 청년센터 시범 운영 및 청년정보 ON 통합 서비스 개설</p>' +
     '<div class="actions">' + linkTo("space", "공간 안내 및 예약", "primary") + linkTo("directions", "오시는길", "secondary") + '</div></div>');
 }
 function calendar(kind, params) {
