@@ -289,9 +289,14 @@ function directions() {
         <h2 id="directions-location">행복시 청년센터</h2>
         <p class="directions-address">행복시 행복동 청년로 1 (가상 주소)</p>
         <figure class="directions-map">
-          <div class="directions-map-view" aria-hidden="true">
-            <div class="directions-marker">
+          <div class="directions-map-view" data-zoom="1">
+            <div class="directions-map-image" aria-hidden="true"></div>
+            <div class="directions-marker" aria-hidden="true">
               <span>행복시 청년센터</span><i></i>
+            </div>
+            <div class="directions-zoom" role="group" aria-label="가상 지도 확대 및 축소">
+              <button type="button" data-action="map-zoom" data-id="in" aria-label="지도 확대">+</button>
+              <button type="button" data-action="map-zoom" data-id="out" aria-label="지도 축소" disabled>−</button>
             </div>
           </div>
           <figcaption>가상 지도 · 역, 정류장, 도로는 위치 안내를 위한 예시입니다.</figcaption>
@@ -300,18 +305,33 @@ function directions() {
       <div class="directions-info">
         <section class="panel" aria-labelledby="directions-transit">
           <h2 id="directions-transit">대중교통</h2>
-          <dl class="directions-transit">
-            <dt>지하철</dt>
-            <dd><strong>2호선 행복역</strong> 2번 출구에서 도보 8분</dd>
-            <dt>버스</dt>
-            <dd><strong>청년센터 정류장</strong> 하차 후 도보 2분
-              <ul class="directions-buses">
-                <li><b>간선</b> 120번, 152번</li>
-                <li><b>지선</b> 2211번, 2312번</li>
-                <li><b>마을</b> 행복03번</li>
-              </ul>
-            </dd>
-          </dl>
+          <div class="directions-transit">
+            <section class="directions-mode">
+              <span class="directions-mode-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="15" rx="4"/><path d="M6 11h12M9 18l-2 3m8-3 2 3M9 14h.01m6 0h.01"/></svg>
+              </span>
+              <div>
+                <h3>지하철</h3>
+                <p class="directions-stop"><span class="directions-line">2호선</span><strong>행복역 2번 출구</strong></p>
+                <p class="directions-walk">출구에서 도보 8분</p>
+              </div>
+            </section>
+            <section class="directions-mode">
+              <span class="directions-mode-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="14" rx="3"/><path d="M5 11h14M7 18v2m10-2v2M8 15h.01m8 0h.01"/></svg>
+              </span>
+              <div>
+                <h3>버스</h3>
+                <p class="directions-stop"><strong>청년센터 정류장</strong></p>
+                <p class="directions-walk">하차 후 도보 2분</p>
+                <ul class="directions-buses">
+                  <li><b>간선</b> 120번, 152번</li>
+                  <li><b>지선</b> 2211번, 2312번</li>
+                  <li><b>마을</b> 행복03번</li>
+                </ul>
+              </div>
+            </section>
+          </div>
         </section>
         <section class="panel" aria-labelledby="directions-hours">
           <h2 id="directions-hours">이용 안내</h2>
@@ -565,6 +585,14 @@ document.addEventListener("click", async (event) => {
   const item = items.find((entry) => entry.id === id);
   const record = state.records.find((entry) => entry.id === id);
   switch (action) {
+    case "map-zoom": {
+      const map = target.closest(".directions-map-view");
+      const level = Math.max(1, Math.min(3, Number(map.dataset.zoom) + (id === "in" ? 1 : -1)));
+      map.dataset.zoom = level;
+      map.querySelector('[data-id="in"]').disabled = level === 3;
+      map.querySelector('[data-id="out"]').disabled = level === 1;
+      break;
+    }
     case "menu":
       target.setAttribute("aria-expanded", $("#nav").classList.toggle("open"));
       break;
