@@ -35,7 +35,7 @@
    const marker=L.marker(p.mapPosition,{icon,title:`${p.place}`,alt:`${p.place} 프로그램 정보`,keyboard:true}).addTo(map);
    const popup=document.createElement('div');popup.className='place-popup';
    const title=document.createElement('strong');title.textContent=p.place;
-   const type=document.createElement('p');type.textContent=`${p.district} · ${p.type}`;
+   const type=document.createElement('p');type.textContent=`서울특별시 ${p.district} 책길 ${Number(p.key.slice(-1))*12} · ${p.type}`;
    const program=document.createElement('p');program.textContent=p.name;
    const open=document.createElement('button');open.type='button';open.className='button primary';open.textContent='공간·프로그램 확인';open.addEventListener('click',()=>onSelect(p.key));
    popup.append(title,type,program,open);marker.bindPopup(popup,{minWidth:230});
@@ -46,5 +46,6 @@
   requestAnimationFrame(()=>{if(currentMap===map)map.invalidateSize({pan:false});});
   if(window.ResizeObserver){resizeObserver=new ResizeObserver(()=>{if(currentMap===map)map.invalidateSize({pan:false});});resizeObserver.observe(container);}
  }
- window.ShyuMap={mount,unmount};
+ function locate(){const status=document.getElementById('location-status');if(!navigator.geolocation){if(status)status.textContent='현재 위치를 사용할 수 없어 서울 기본 지도를 표시합니다.';return;}if(status)status.textContent='현재 위치 권한을 확인하고 있습니다.';navigator.geolocation.getCurrentPosition(position=>{if(currentMap){currentMap.setView([position.coords.latitude,position.coords.longitude],13);if(status)status.textContent='현재 위치 주변을 표시했습니다.';}else if(status)status.textContent='현재 지도에서는 위치 이동을 지원하지 않습니다. 지역 검색을 이용해 주세요.';},()=>{if(status)status.textContent='위치 권한이 없거나 위치를 확인할 수 없어 기본 지도를 유지합니다.';},{enableHighAccuracy:false,timeout:8000,maximumAge:60000});}
+ window.ShyuMap={mount,unmount,locate};
 })();
