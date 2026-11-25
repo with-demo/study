@@ -391,74 +391,167 @@ body{background:#fff}#app{font-size:16px;color:#15243b;line-height:1.55}#app [hi
   }
 }
 
+#app .page:has(> .center-intro) {
+  width: min(1320px, calc(100% - 32px));
+}
+
 #app .center-intro {
   display: grid;
-  gap: clamp(36px, 6cqi, 72px);
+  gap: clamp(24px, 3.4cqi, 44px);
+  line-height: 1.7;
 }
 
 #app .center-intro h2 {
   color: var(--navy);
-}
-
-#app .center-intro-hero h2 {
-  margin: 8px 0 24px;
-  text-align: center;
-  font-size: clamp(24px, 3.5cqi, 42px);
+  font-size: clamp(24px, 2.6cqi, 28px);
   line-height: 1.3;
 }
 
-#app .center-intro img {
-  display: block;
+#app .center-intro-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  align-items: center;
+  min-height: clamp(280px, 30cqi, 380px);
+  padding: clamp(24px, 5cqi, 66px);
+  border-radius: var(--radius);
+  background: #132e61;
+  color: white;
+}
+
+#app .center-intro-hero img,
+#app .center-intro-hero::after {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  object-fit: cover;
-  border-radius: 12px;
-  background: var(--pale);
+  height: 100%;
+  z-index: -1;
 }
 
 #app .center-intro-hero img {
-  aspect-ratio: 3.4;
+  object-fit: cover;
+  object-position: 67% center;
+}
+
+#app .center-intro-hero::after {
+  content: "";
+  background: linear-gradient(90deg, #102848 0%, #102848f5 24%, #102848b8 45%, #10284826 78%);
+}
+
+#app .center-intro-hero-copy {
+  max-width: 370px;
+}
+
+#app .center-intro-hero-copy p:first-child {
+  color: #adf4ea;
+  font-weight: 800;
+}
+
+#app .center-intro-hero h2 {
+  margin: 8px 0 12px;
+  color: white;
+  font-size: clamp(36px, 4.5cqi, 42px);
+}
+
+#app .center-intro-services > h2 {
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+#app .center-intro-service-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+#app .center-intro-service {
+  padding: clamp(16px, 2.2cqi, 26px);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--pale);
+}
+
+#app .center-intro-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 10px;
+  border-radius: 50%;
+  background: #dce9ff;
+  color: var(--blue);
+}
+
+#app .center-intro-service:nth-child(2) .center-intro-icon {
+  background: #d8f0ed;
+  color: #08756e;
+}
+
+#app .center-intro-icon svg {
+  width: 23px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+#app .center-intro-service h3 a,
+#app .center-intro-service > a {
+  color: var(--blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+#app .center-intro-service > a {
+  display: inline-block;
+  margin-top: 5px;
+  font-size: 14px;
+  font-weight: 700;
 }
 
 #app .center-intro-story {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
   align-items: center;
-  gap: clamp(20px, 5cqi, 60px);
-}
-
-#app .center-intro-story-reversed {
-  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
-}
-
-#app .center-intro-story-reversed img {
-  order: -1;
-}
-
-#app .center-intro-story img {
-  aspect-ratio: 1.8;
-}
-
-#app .center-intro-story p {
-  color: var(--muted);
-}
-
-#app .center-intro-visit {
-  padding: clamp(20px, 4cqi, 40px);
-  border: 1px solid var(--line);
+  gap: clamp(16px, 3cqi, 42px);
+  padding: clamp(16px, 3cqi, 36px);
   border-radius: var(--radius);
   background: var(--pale);
 }
 
+#app .center-intro-story img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2.15;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+#app .center-intro-story a {
+  margin-top: 12px;
+}
+
+#app .center-intro-visit {
+  padding: clamp(16px, 3cqi, 32px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+#app .center-intro-visit .details {
+  grid-template-columns: 1.35fr .8fr 1.1fr;
+  margin-bottom: 0;
+}
+
 @container (max-width: 680px) {
-  #app .center-intro-story {
+  #app .center-intro-service-list,
+  #app .center-intro-story,
+  #app .center-intro-visit .details {
     grid-template-columns: 1fr;
   }
 
-  #app .center-intro-story-reversed img {
-    order: 0;
-  }
-
-  #app .center-intro-hero img {
-    aspect-ratio: 2.35;
+  #app .center-intro-hero::after {
+    background: linear-gradient(90deg, #102848f5, #102848b8 68%, #10284880);
   }
 }
