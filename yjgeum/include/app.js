@@ -278,6 +278,7 @@ function organization() {
       </ul>
     </section>`, "center");
 }
+const centerAddress = "행복시 행복동 청년로 1 (가상 주소)";
 const centerHours = [
   ["운영시간", "평일 09:00~21:00 / 토요일 09:00~18:00"],
   ["휴관일", "일요일 및 공휴일"]
@@ -288,7 +289,7 @@ function directions() {
     `<div class="directions">
       <section class="panel" aria-labelledby="directions-location">
         <h2 id="directions-location">행복시 청년센터</h2>
-        <p class="directions-address">행복시 행복동 청년로 1 (가상 주소)</p>
+        <p class="directions-address">${centerAddress}</p>
         <figure class="directions-map">
           <div class="directions-map-view" data-zoom="1">
             <div class="directions-map-image" aria-hidden="true"></div>
@@ -343,33 +344,49 @@ function directions() {
 }
 
 function centerIntro() {
-  return page("청년센터 소개", "행복시 청년센터를 소개합니다.",
+  const services = [
+    ["space", "공간 이용", "스터디실과 다목적실을 예약해 모임과 프로젝트를 진행할 수 있어요.",
+      '<path d="M4 12V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4M6 19v2m12-2v2"/><rect x="3" y="12" width="18" height="7" rx="2"/>'],
+    ["program", "교육과 성장", "직무 교육과 강연, 워크숍에서 관심 분야를 배우고 경험을 넓혀보세요.",
+      '<path d="m2 9 10-5 10 5-10 5-10-5Zm4 2v5c3 3 9 3 12 0v-5m4-2v6"/>'],
+    ["counsel", "상담과 지원", "마음건강 상담을 신청하거나 일자리·주거 등 청년정책을 찾아보세요.",
+      '<path d="M14 15H8l-5 4V5h14v8m-1-4h5v12l-4-3h-4"/>']
+  ];
+
+  return page("청년센터 소개", "행복시 청년센터의 공간과 서비스를 안내합니다.",
     `<div class="center-intro">
       <section class="center-intro-hero" aria-labelledby="center-intro-title">
-        <h2 id="center-intro-title">청년의 내일을 함께 만드는<br>행복시 청년센터</h2>
-        <img src="center-lounge.webp" alt="밝은 라운지에서 이야기를 나누는 청년들">
-      </section>
-      <section class="center-intro-story">
-        <div>
-          <h2>배움과 교류가 시작되는 공간</h2>
-          <p>관심 있는 분야를 배우고, 비슷한 고민을 가진 또래를 만날 수 있는 열린 공간입니다.</p>
-          <p>교육과 강연에 참여하거나 스터디실과 다목적실을 예약해 작은 모임을 열어보세요.</p>
+        <img src="center-lounge.webp" alt="" fetchpriority="high">
+        <div class="center-intro-hero-copy">
+          <p>행복시 청년센터</p>
+          <h2 id="center-intro-title">청년의 내일을<br>함께 만드는 공간</h2>
+          <p>모임부터 새로운 배움, 마음건강 상담까지 필요한 순간에 함께합니다.</p>
         </div>
+      </section>
+      <section class="center-intro-services" aria-labelledby="center-intro-services">
+        <h2 id="center-intro-services">청년센터에서 무엇을 할 수 있나요?</h2>
+        <div class="center-intro-service-list">
+          ${services.map(([route, title, description, graphic]) => `<article class="center-intro-service">
+            <span class="center-intro-icon" aria-hidden="true"><svg viewBox="0 0 24 24">${graphic}</svg></span>
+            <h3>${linkTo(route, title)}</h3>
+            <p>${description}</p>
+            ${route === "counsel" ? linkTo("policy", "청년정책 찾아보기") : ""}
+          </article>`).join("")}
+        </div>
+      </section>
+      <section class="center-intro-story" aria-labelledby="center-intro-space">
         <img src="center-classroom.webp" alt="창가를 따라 책상과 의자가 놓인 교육실" loading="lazy">
-      </section>
-      <section class="center-intro-story center-intro-story-reversed">
         <div>
-          <h2>혼자 고민할 때 함께하는 곳</h2>
-          <p>취업 준비나 일상이 막막할 때 필요한 청년정책과 지원사업을 찾아볼 수 있습니다.</p>
-          <p>마음건강 상담과 프로그램을 통해 지금 필요한 도움을 만나보세요.</p>
+          <h2 id="center-intro-space">함께 성장하는 공간</h2>
+          <p>스터디실에서는 면접을 준비하거나 소규모 모임을 열 수 있어요. 다목적실은 강연과 워크숍, 팀 프로젝트에 활용할 수 있습니다.</p>
+          ${linkTo("space", "센터 공간 살펴보기", "secondary")}
         </div>
-        <img src="center-exterior.webp" alt="나무가 늘어선 길에서 바라본 청년센터 입구" loading="lazy">
       </section>
       <section class="center-intro-visit" aria-labelledby="center-intro-visit-title">
         <h2 id="center-intro-visit-title">청년센터 방문 안내</h2>
-        ${details(centerHours)}
+        ${details([...centerHours, ["위치", centerAddress]])}
         <div class="actions">
-          ${linkTo("space", "공간 안내 및 예약", "primary")}
+          ${linkTo("rental-calendar", "공간 예약하기", "primary")}
           ${linkTo("directions", "오시는길", "secondary")}
         </div>
       </section>
