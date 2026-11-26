@@ -1,0 +1,31 @@
+import {test,beforeEach} from 'node:test';
+import assert from 'node:assert/strict';
+import {DatabaseSync} from 'node:sqlite';
+import {readFileSync} from 'node:fs';
+import ts from 'typescript';
+import {z} from 'zod';
+import * as domain from '../app/domain.ts';
+
+// Exercise the actual API handlers using an in-memory SQLite D1 adapter.
+const sqlite=new DatabaseSync(':memory:');
+sqlite.exec(readFileSync(new URL('../drizzle/0000_fluffy_kate_bishop.sql',import.meta.url),'utf8'));
+let user={userId:'owner-A',displayName:'A',email:'a@example.test'};
+globalThis.__apiTest={z,...domain,getChatGPTUser:async()=>user,env:{DB:{prepare(sql){return {bind(...args){const query=sqlite.prepare(sql);return {async run(){const result=query.run(...args);return {meta:{changes:Number(result.changes)}};},async first(){return query.get(...args)||null;}};}};}}}};
+const source=readFileSync(new URL('../app/api/workspace/route.ts',import.meta.url),'utf8').replace(/^import .*;\r?\n/gm,'');
+const compiled=ts.transpileModule('const {env,z,getChatGPTUser,emptyWorkspace,changeStatus,trashProject,restoreProject}=globalThis.__apiTest;\n'+source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
+const api=await import('data:text/javascript;base64,'+Buffer.from(compiled).toString('base64'));
+const get=async()=>{const r=await api.GET();return {status:r.status,body:await r.json()};};
+const post=async(action,payload,id,version)=>{if(version===undefined)version=(await get()).body.version;const r=await api.POST(new Request('https://task.test/api/workspace',{method:'POST',headers:{'Content-Type':'application/json',Origin:'https://task.test'},body:JSON.stringify({action,payload,id,version})}));return {status:r.status,body:await r.json()};};
+beforeEach(()=>{sqlite.exec('DELETE FROM workspaces');user={userId:'owner-A',displayName:'A',email:'a@example.test'};});
+test('anonymous read and write are rejected',async()=>{user=null;assert.equal((await get()).status,401);assert.equal((await post('task.save',{title:'secret'},undefined,0)).status,401);});
+test('first login creates one empty workspace; subsequent loads preserve it',async()=>{assert.equal((await get()).body.data.tasks.length,0);await get();assert.equal(sqlite.prepare('SELECT COUNT(*) AS n FROM workspaces').get().n,1);});
+test('another account cannot read or update the first account task',async()=>{const a=await post('task.save',{title:'Private A'});const id=a.body.createdId;user={userId:'owner-B',displayName:'B',email:'b@example.test'};assert.equal((await get()).body.data.tasks.length,0);assert.equal((await post('task.status','done',id)).status,400);user={userId:'owner-A',displayName:'A',email:'a@example.test'};assert.equal((await get()).body.data.tasks[0].status,'todo');});
+test('blank titles and invalid dates are rejected without changing version',async()=>{assert.equal((await post('task.save',{title:'  '})).status,400);assert.equal((await post('task.save',{title:'bad date',due:'2026-02-30'})).status,400);assert.equal((await get()).body.version,0);});
+test('unknown projects cannot be linked to a task',async()=>{assert.equal((await post('task.save',{title:'Bad link',projectId:'another-owner-project'})).status,400);});
+test('server assigns IDs and timestamps and preserves them on edit',async()=>{let r=await post('task.save',{id:'forged',title:'Task',createdAt:'forged'});assert.notEqual(r.body.createdId,'forged');const t=r.body.data.tasks[0];r=await post('task.save',{title:'Updated',status:'done'},t.id);assert.equal(r.body.data.tasks[0].createdAt,t.createdAt);assert.ok(r.body.data.tasks[0].completedAt);r=await post('task.status','todo',t.id);assert.equal(r.body.data.tasks[0].completedAt,null);});
+test('stale version returns 409 without overwriting saved work',async()=>{await post('task.save',{title:'First'},undefined,0);const stale=await post('task.save',{title:'Stale'},undefined,0);assert.equal(stale.status,409);assert.equal((await get()).body.data.tasks.length,1);});
+test('bulk failure changes none of the selected tasks',async()=>{const r=await post('task.save',{title:'First'});assert.equal((await post('task.bulk',{ids:[r.body.createdId,'missing'],status:'done'})).status,400);assert.equal((await get()).body.data.tasks[0].status,'todo');});
+test('project deletion and restore preserve preexisting deleted state',async()=>{const p=(await post('project.save',{name:'P'})).body.createdId;const t1=(await post('task.save',{title:'One',projectId:p})).body.createdId;const t2=(await post('task.save',{title:'Two',projectId:p})).body.createdId;await post('task.trash',undefined,t2);await post('project.trash',undefined,p);assert.equal((await post('task.restore',undefined,t1)).status,400);const r=await post('project.restore',undefined,p);assert.equal(r.body.data.tasks.find(t=>t.id===t1).deletedAt,null);assert.ok(r.body.data.tasks.find(t=>t.id===t2).deletedAt);});
+test('purge is only allowed in trash and removes project relationships',async()=>{const p=(await post('project.save',{name:'P'})).body.createdId;await post('task.save',{title:'One',projectId:p});assert.equal((await post('project.purge',undefined,p)).status,400);await post('project.trash',undefined,p);const r=await post('project.purge',undefined,p);assert.equal(r.body.data.tasks.length,0);assert.equal(r.body.data.projects.length,0);});
+test('invalid backup is rejected atomically; valid backup remaps IDs',async()=>{await post('task.save',{title:'Keep'});const s=(await get()).body.data;const bad=structuredClone(s);bad.tasks.push({...bad.tasks[0]});assert.equal((await post('backup.import',{format:'task-workspace',schemaVersion:1,data:bad})).status,400);assert.equal((await get()).body.data.tasks.length,1);const r=await post('backup.import',{format:'task-workspace',schemaVersion:1,data:s});assert.equal(r.status,200);assert.notEqual(r.body.data.tasks[0].id,s.tasks[0].id);assert.equal(r.body.data.tasks[0].title,'Keep');});
+test('cross-origin mutations are rejected',async()=>{const r=await api.POST(new Request('https://task.test/api/workspace',{method:'POST',headers:{Origin:'https://malicious.test'},body:'{}'}));assert.equal(r.status,403);});

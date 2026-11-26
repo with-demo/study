@@ -1,61 +1,45 @@
-# Task — 나의 작업 공간
+# Task — 스터디 데모
 
-개인 작업, 프로젝트, 일정을 한곳에서 관리하는 한국어 웹 앱입니다. 제공된 사이트맵·기능 명세 v0.2를 기준으로 구현했습니다.
+**[GitHub Pages에서 데모 열기](https://with-demo.github.io/study/jshwan/task-workspace/)**
 
-## 기능
+로그인 화면의 **로그인** 버튼을 누르면 즉시 작업 공간으로 들어갑니다. 실제 계정 생성, 비밀번호 입력, ChatGPT·GitHub 인증은 하지 않습니다.
 
-- ChatGPT 계정 로그인과 계정별 서버 저장
-- 오늘·기한 초과·진행 중 요약 대시보드
-- 작업 CRUD, 완료·다시 열기, 목록·드래그 보드
-- 프로젝트·우선순위·태그·상태 필터, 정렬, 일괄 변경
-- 프로젝트 개요·진행률·목표일·보관
-- 월간 캘린더와 날짜별 작업
-- 휴지통, 복원, 확인 후 영구 삭제
-- 통합 검색, 체크리스트, 모바일 레이아웃
-- JSON 백업 내보내기·검증 후 전체 대체 가져오기
+## 사용 방식
 
-처음 로그인하면 빈 공간으로 시작합니다. 작업 제목·설명 등 필드 편집은 저장 버튼으로 확정합니다. 날짜 기준은 Asia/Seoul입니다.
+- 홈, 작업 목록·보드, 프로젝트, 캘린더, 보관함·휴지통, 검색, 체크리스트, 설정을 체험할 수 있습니다.
+- 작업은 현재 브라우저의 localStorage에 저장합니다. 다른 기기·브라우저와 공유하거나 서버에 동기화하지 않습니다.
+- 로그아웃은 로그인 화면으로 돌아가는 데모 동작입니다. 저장한 작업은 같은 브라우저에서 다시 볼 수 있습니다.
+- 브라우저 데이터를 삭제하면 작업도 삭제됩니다. 데이터 관리에서 JSON 백업을 다운로드하거나 가져올 수 있습니다.
+- 최초 상태는 빈 작업 공간입니다. 실제 사용자의 예시 데이터나 계정 정보는 포함하지 않습니다.
 
-## 기술 구성
+## GitHub Pages 구성
 
-React 19, TypeScript, Vinext, Cloudflare Workers, D1, Drizzle. 인증은 Sites의 ChatGPT 인증 게이트웨이를 사용합니다. D1에는 사용자별 작업 공간과 수정 버전을 저장합니다. 충돌 시 서버는 409를 반환해 덮어쓰기를 막습니다.
+저장소의 기존 Pages 설정으로 서비스합니다. 새 서버나 데이터베이스 설정은 필요하지 않습니다.
 
-## 실행
+- `index.html`: Pages 진입점
+- `demo-assets/`: 빌드된 JavaScript·CSS·라이선스
+- `demo/`: 데모 진입·브라우저 저장·해시 경로·공통 도구 연결
+- `app/task-app.tsx`, `app/task.css`: 기존 화면과 스타일
+- `../../common/include/spec-panel.js`: 저장소 공통 스터디 도구를 상대 경로로 참조
 
-Node.js 22.13 이상과 npm이 필요합니다.
+메뉴는 해시 경로를 사용하므로 하위 화면에서 새로고침해도 GitHub Pages 404가 나지 않습니다. 이전 여행 사이트는 [기존 주소](https://with-demo.github.io/study/jshwan/)에서 그대로 유지합니다.
+
+상단 도구의 Description은 읽기 전용 화면 설명입니다. 설명 공동 저장·댓글·실제 GitHub 인증은 이번 데모에 연결하지 않았습니다. 화면 ID는 JST 접두사, 데모 데이터 키는 study.jshwan.task-workspace.v1을 사용합니다.
+
+## 수정 및 빌드
+
+Node.js 22 이상에서 다음을 실행합니다.
 
 ```sh
 npm ci
-npm run build
-node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0000_fluffy_kate_bishop.sql
-npm run dev
+npm run test:demo
+npm run build:demo
 ```
 
-`http://127.0.0.1:5173`에서 로컬 미리보기를 엽니다. 로컬 인증은 starter가 제공하는 테스트 계정이며 실제 서비스 데이터와 분리됩니다. 위 SQL은 최초 로컬 DB 초기화 때 한 번만 적용합니다. 이미 초기화했다면 생략합니다.
+소스를 수정하면 생성된 `demo-assets/`도 함께 커밋해야 Pages 화면에 반영됩니다. Pages에서는 `npm run build`나 서버 API를 실행하지 않습니다.
 
-다른 호스팅 환경에서 실행하려면 신뢰할 수 있는 인증 계층과 D1 바인딩을 구성해야 합니다. GitHub Pages만으로 서버 API를 실행할 수 없습니다.
+기존 서버 구현인 `app/api/`, `worker/`, `db/`, `.openai/`는 이전 구현을 보존한 것이며 이 정적 데모에서는 사용하지 않습니다. 기존 비공개 Sites 배포의 인증과 데이터를 변경하거나 공개하지 않습니다.
 
 ## 검증
 
-```sh
-node --test tests/domain.test.mjs tests/api.test.mjs
-npx tsc --noEmit
-npm run build
-```
-
-`tests/api.test.mjs`는 Node.js 24의 내장 SQLite를 이용해 실제 API 핸들러를 검증합니다. API·도메인 테스트 총 16개, 타입 검사, 배포 빌드를 통과했습니다. 로컬 브라우저 미리보기는 실행 승인이 없어 검증하지 못했습니다. 실계정 로그인과 실기기 화면 검증은 별도로 필요합니다.
-
-## 코드 안내
-
-- `app/task-app.tsx`: 화면과 입력 흐름
-- `app/task.css`: 반응형 스타일
-- `app/api/workspace/route.ts`: 인증·검증·데이터 갱신
-- `app/domain.ts`: 상태·완료율·삭제·복원 규칙
-- `db/schema.ts`, `drizzle/`: 데이터베이스 스키마와 마이그레이션
-- `.openai/hosting.json`: 사이트 식별자와 D1 바인딩
-
-[구현 정책](IMPLEMENTATION.md) · [GitHub 업로드 안내](GITHUB-GUIDE.md)
-
-## GitHub 저장 위치
-
-기존 `with-demo/study` 저장소의 `jshwan` 폴더 아래에 **task-workspace**를 추가합니다. 기존 `index.html` 등은 유지합니다. GitHub는 소스와 변경 이력을 관리하며 실제 서비스 배포와는 별도입니다.
+데모 로그인, 인증·네트워크 없는 저장, 로그아웃 후 유지, 잘못된 입력, 완료·다시 열기, 버전 충돌, 저장 공간 실패, 삭제·복원, 백업 검증 테스트 9개와 TypeScript·정적 빌드를 확인합니다. 실제 브라우저 화면 검증 여부는 PR의 검증 결과를 참고하세요.
