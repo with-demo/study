@@ -5,6 +5,6 @@ window.ShyuConsumerUI={
   const index=Number(p.key.split('-')[1])-1;
   return `<div class="program-poster poster-${index%4} ${large?'poster-large':'poster-photo'}"><img src="assets/images/${p.image.file}" alt="" style="object-position:${p.image.position}" loading="lazy">${large?`<div class="poster-copy"><small>책이음 · ${p.type}</small><strong>${p.name}</strong></div>`:''}</div>`;
  },
- breadcrumb(label){return `<div class="breadcrumb"><a href="#SHHOME-01">홈</a><span aria-hidden="true">›</span><span>${label}</span></div>`;},
+ breadcrumb(label){return `<div class="breadcrumb"><a href="#HOM-01">홈</a><span aria-hidden="true">›</span><span>${label}</span></div>`;},
  steps(active=0){return `<ol class="stepper" aria-label="신청 진행 단계">${['신청서 작성','내용 확인','신청 완료'].map((s,i)=>`<li class="${i===active?'active':''}" ${i===active?'aria-current="step"':''}><span>0${i+1}</span> ${s}</li>`).join('')}</ol>`;}
 };

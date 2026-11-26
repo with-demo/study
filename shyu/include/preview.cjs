@@ -1,6 +1,6 @@
 const http=require('node:http'),fs=require('node:fs'),path=require('node:path');
 const {execFile}=require('node:child_process');
-const root=path.resolve(__dirname,'../..'),port=8907,url=`http://127.0.0.1:${port}/shyu/index.html#SH-SPACE-02`;
+const root=path.resolve(__dirname,'../..'),port=8907,url=`http://127.0.0.1:${port}/shyu/index.html#SPC-02`;
 const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.jpg':'image/jpeg','.png':'image/png','.svg':'image/svg+xml'};
 const server=http.createServer((req,res)=>{
  let pathname;try{pathname=decodeURIComponent(new URL(req.url,'http://localhost').pathname);}catch{res.writeHead(400);return res.end();}

@@ -2,7 +2,9 @@
 const {screenDefs,types,districts,rows,notices,questions,programImages,spaceImages,mapPositions}=window.SHYU_DATA;
 
 // 사이트맵 ID는 보존하고 서버가 허용하는 단일 접두부 ID로 화면·Description을 연결합니다.
-const compatibleId=value=>value.replace(/^SH-([A-Z]+)-(\d{2})(.*)$/, 'SH$1-$2$3');
+const screenPrefixes={"PROG":"PRG","AUTH":"AUT","APPLY":"APL","MY":"MYP","SPACE":"SPC","CAL":"CAL","NOTICE":"NTC","FAQ":"FAQ","HOME":"HOM","INTRO":"INT","GUIDE":"GDE","REVIEW":"REV"};
+const compatibleId=value=>value.replace(/^SH-?([A-Z]+)-(\d{2})(.*)$/,(_,type,number,suffix)=>(screenPrefixes[type]||type)+'-'+number+suffix);
+window.ShyuScreenIds={normalize:compatibleId,legacy:value=>value.replace(/^([A-Z]{3})-(\d{2})(.*)$/,(_,type,number,suffix)=>'SH'+(Object.keys(screenPrefixes).find(key=>screenPrefixes[key]===type)||type)+'-'+number+suffix)};
 const screens=screenDefs.map(([planningId,title])=>({id:compatibleId(planningId),planningId,title,summary:title}));
 window.GFAIR_SCREENS=[{name:'책이음',screens}];
 const id=n=>screens[n-1].id;
