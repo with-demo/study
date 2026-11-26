@@ -1,5 +1,5 @@
 export type Status = 'todo' | 'doing' | 'done';
-export type Task = { id:string; title:string; description:string; status:Status; priority:'high'|'normal'|'low'; due:string; projectId:string; tags:string[]; checklist:{id:string;title:string;done:boolean}[]; createdAt:string; updatedAt:string; completedAt:string|null; deletedAt:string|null; deletedBy:string|null };
+export type Task = { id:string; title:string; description:string; status:Status; priority:'high'|'normal'|'low'; due:string; useStartDate:boolean; startDate:string; projectId:string; tags:string[]; checklist:{id:string;title:string;done:boolean}[]; createdAt:string; updatedAt:string; completedAt:string|null; deletedAt:string|null; deletedBy:string|null };
 export type Project = { id:string; name:string; description:string; target:string; status:'active'|'paused'|'done'; color:string; archived:boolean; deletedAt:string|null; createdAt:string; updatedAt:string };
 export type Workspace = { settings:{name:string;start:string;weekStart:number}; tasks:Task[]; projects:Project[] };
 export const emptyWorkspace = ():Workspace => ({settings:{name:'나의 작업 공간',start:'/',weekStart:1},tasks:[],projects:[]});

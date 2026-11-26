@@ -52,3 +52,57 @@ test('every published description has the five required planning fields and exce
   for(const item of spec.items)for(const key of ['item','type','defaultValue','required','detail'] as const)assert.ok(item[key].trim(),id+':'+key);
  }
 });
+
+import { normalizeTaskSchedule, toggleTaskStartDate } from '../app/task-schedule';
+import { TaskScheduleFields } from '../app/task-schedule-fields';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+test('start date controls are opt-in and date bounds follow the selected period',()=>{
+ const off={useStartDate:false,startDate:'',due:'2026-12-10'};
+ const render=(value:typeof off)=>renderToStaticMarkup(createElement(TaskScheduleFields,{value,onChange:()=>{}}));
+ assert.doesNotMatch(render(off),/aria-label="시작일"/);
+ const on=toggleTaskStartDate(off,true);assert.equal(on.startDate,'');
+ assert.match(render(on),/aria-label="시작일"[^>]*required=""/);
+ const period={...on,startDate:'2026-12-01'};
+ assert.match(render(period),/max="2026-12-10"/);assert.match(render(period),/min="2026-12-01"/);
+ assert.deepEqual(toggleTaskStartDate(period,false),off);
+ assert.throws(()=>normalizeTaskSchedule(on),/시작일을 입력/);
+});
+test('optional start dates survive save, reopen, duplicate and backup import',async()=>{
+ demoSignIn();
+ const created=await post('task.save',{title:'기간 작업',useStartDate:true,startDate:'2026-12-01',due:'2026-12-10'});
+ assert.equal(created.status,200);const id=created.body.createdId;
+ demoSignOut();demoSignIn();
+ assert.equal((await get()).body.data.tasks[0].startDate,'2026-12-01');
+ await post('task.duplicate',undefined,id);
+ const data=(await get()).body.data;
+ assert.ok(data.tasks.every((t:any)=>t.useStartDate&&t.startDate==='2026-12-01'));
+ assert.equal((await post('backup.import',{format:'task-workspace',schemaVersion:1,data})).status,200);
+ const current=(await get()).body.data.tasks[0];
+ assert.equal(current.startDate,'2026-12-01');
+ assert.equal((await post('task.save',{...current,useStartDate:false,startDate:''},current.id)).status,200);
+ assert.equal((await get()).body.data.tasks[0].startDate,'');
+});
+test('date validation rejects missing, invalid and reversed start dates without changing data',async()=>{
+ demoSignIn();
+ for(const payload of [
+  {useStartDate:true,startDate:''},
+  {useStartDate:true,startDate:'2026-02-30'},
+  {useStartDate:true,startDate:'2026-12-11',due:'2026-12-10'}
+ ])assert.equal((await post('task.save',{title:'Invalid',...payload})).status,400);
+ assert.equal((await get()).body.version,0);
+ assert.equal((await post('task.save',{title:'Same day',useStartDate:true,startDate:'2026-12-10',due:'2026-12-10'})).status,200);
+ assert.equal((await post('task.save',{title:'Start only',useStartDate:true,startDate:'2026-12-10'})).status,200);
+ const data=(await get()).body.data;data.tasks[0].startDate='2026-12-11';
+ assert.equal((await post('backup.import',{format:'task-workspace',schemaVersion:1,data})).status,400);
+ assert.equal((await get()).body.data.tasks[0].startDate,'2026-12-10');
+});
+test('legacy storage and backups without start date fields remain readable',async()=>{
+ demoSignIn();await post('task.save',{title:'기존 작업'});
+ const data=(await get()).body.data;delete data.tasks[0].useStartDate;delete data.tasks[0].startDate;
+ local.setItem(STORAGE_KEY,JSON.stringify({schemaVersion:1,version:3,data}));
+ const current=await get();assert.equal(current.status,200);
+ assert.equal(current.body.data.tasks[0].useStartDate,false);assert.equal(current.body.data.tasks[0].startDate,'');
+ assert.equal((await post('backup.import',{format:'task-workspace',schemaVersion:1,data})).status,200);
+ assert.equal((await get()).body.data.tasks[0].useStartDate,false);
+});
