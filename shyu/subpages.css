@@ -18,9 +18,8 @@
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 
 /* 최종 사이트맵: 목록 상태·찜·사진 탐색 */
-.program-unavailable{background:#f4f4f1;color:#62665f}
-.program-unavailable .program-poster{filter:grayscale(.75);opacity:.7}
-.program-unavailable h3{color:#62665f}
+.program-unavailable .poster-link{cursor:default}
+/* 마감 여부는 배지와 문구로 알리고 사진과 본문의 색상은 유지합니다. */
 .availability-note{font-size:.875rem;color:#61685e}
 .result-size{display:flex;align-items:center;gap:.6rem;font-size:.9rem}
 .result-size select{min-height:44px;padding:.4rem .8rem;border:1px solid #bacab6;border-radius:5px;background:#fff}
