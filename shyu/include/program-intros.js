@@ -1,4 +1,4 @@
-/* 프로그램별 소개 콘텐츠. 실제 운영 계획이 아닌 기획용 예시입니다. */
+/* 프로그램별 소개·선정 도서는 기획 예시입니다. 도서 서지는 출판사에서 확인합니다. */
 window.SHYU_PROGRAM_INTROS={
   "book-1": {
     "headline": "같은 소설, 서로 다른 마음",
@@ -16,8 +16,18 @@ window.SHYU_PROGRAM_INTROS={
       "인물의 선택과 인상 깊은 문장 이야기하기",
       "각자의 질문을 나누고 다음 만남 준비하기"
     ],
-    "preparation": "읽고 싶은 소설 한 권과 표시해 둔 문장, 필기구를 가져오세요. 세 차례 만남에서 같은 책을 이어 읽습니다.",
-    "takeaway": "다른 사람의 시선이 담긴 나만의 독서 기록"
+    "preparation": "『데미안』과 필기구를 준비해 주세요. 세 차례 만남에서 같은 책을 이어 읽습니다.",
+    "takeaway": "다른 사람의 시선이 담긴 나만의 독서 기록",
+    "book": {
+      "title": "데미안",
+      "author": "헤르만 헤세",
+      "translator": "전영애",
+      "publisher": "민음사",
+      "cover": "assets/images/books/demian.jpg",
+      "source": "https://minumsa.minumsa.com/book/1713/",
+      "description": "싱클레어가 데미안과의 만남을 통해 자신만의 삶과 내면을 찾아가는 성장소설입니다.",
+      "reading": "세 차례 만남에서 같은 책을 나눠 읽습니다. 첫 만남에는 인상 깊은 장면과 질문 한 가지를 준비해 주세요."
+    }
   },
   "book-2": {
     "headline": "오늘의 마음을 한 문장으로",
@@ -187,8 +197,18 @@ window.SHYU_PROGRAM_INTROS={
       "짧은 대목을 읽으며 질문 적기",
       "현재의 일상과 연결해 토론하기"
     ],
-    "preparation": "함께 읽고 싶은 고전 한 권과 필기구를 준비해 주세요. 완독하지 않아도 참여할 수 있습니다.",
-    "takeaway": "고전을 이어 읽는 질문과 독서 메모"
+    "preparation": "『동물농장』과 필기구를 준비해 주세요. 완독하지 않아도 참여할 수 있습니다.",
+    "takeaway": "고전을 이어 읽는 질문과 독서 메모",
+    "book": {
+      "title": "동물농장",
+      "author": "조지 오웰",
+      "translator": "도정일",
+      "publisher": "민음사",
+      "cover": "assets/images/books/animal-farm.jpg",
+      "source": "https://minumsa.minumsa.com/book/1675/",
+      "description": "동물들이 세운 농장의 변화를 통해 권력과 평등, 공동체의 약속을 돌아보게 하는 우화소설입니다.",
+      "reading": "함께 살펴볼 장면을 표시해 오세요. 완독하지 않아도 궁금했던 대목부터 이야기를 나눌 수 있습니다."
+    }
   },
   "book-11": {
     "headline": "사진 밖에 남아 있는 여행 이야기",

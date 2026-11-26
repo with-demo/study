@@ -27,12 +27,12 @@ body{font-family:var(--font-ui);font-weight:400;letter-spacing:-.025em;line-heig
 /* Program detail: exclusive tab panels, fixed below the shared planning toolbar. */
 .detail-page .detail-tabs{position:sticky;top:var(--sb-toolbar-height,50px);z-index:20;background:#fff;margin-bottom:28px}
 .detail-page .detail-tabs button{border-bottom:3px solid transparent;color:#46533f;padding-inline:12px}
-.detail-page .detail-tabs button[aria-selected="true"]{border-bottom-color:var(--green);color:var(--green);font-weight:700}
+.detail-page .detail-tabs button[aria-current="location"]{border-bottom-color:var(--green);color:var(--green);font-weight:700}
 .detail-page .detail-tabs button:focus-visible{outline:2px solid var(--green);outline-offset:-5px}
-.detail-page [role="tabpanel"][hidden]{display:none!important}
 .detail-page .intro-split{display:block;max-width:680px}
-.detail-page .detail-body{min-height:calc(100vh - var(--sb-toolbar-height,50px) - 90px)}
 .detail-page .booking-sticky{top:calc(var(--sb-toolbar-height,50px) + 90px)}
 
 /* Program-specific editorial introductions. */
 .program-introduction{max-width:760px}.program-introduction>h2{line-height:1.5;word-break:keep-all}.intro-paragraph{font-size:16px;line-height:1.95;color:#4c5949;margin:0 0 18px}.intro-chapter{margin-top:34px;padding-top:26px;border-top:1px solid var(--line)}.intro-chapter h3{font-size:20px;margin-bottom:14px}.intro-chapter p,.intro-chapter li{font-size:16px;line-height:1.9;color:#4c5949}.intro-chapter ul,.intro-activities{padding-left:24px}.intro-chapter li{padding-left:5px;margin-bottom:8px}.intro-activities li::marker{color:var(--green);font-weight:700}.intro-takeaway{margin-top:30px;padding:23px 26px;background:#f2f6e9;border-left:3px solid #739351}.intro-takeaway span{display:block;font-size:13px;color:#5c704e;margin-bottom:8px}.intro-takeaway strong{font-size:18px;line-height:1.7;font-weight:600;word-break:keep-all}
+
+.shared-reading-book{display:grid;grid-template-columns:130px minmax(0,1fr);gap:26px;align-items:start;margin:22px 0}.shared-reading-book img{width:130px;height:200px;object-fit:contain;object-position:top;box-shadow:3px 5px 12px #21351b20}.shared-reading-book h4{font-size:23px;margin:0 0 10px}.shared-reading-book .book-byline{font-size:14px;color:#66715e}.shared-reading-guide{padding-top:14px;border-top:1px solid var(--line)}@media(max-width:600px){.shared-reading-book{grid-template-columns:90px minmax(0,1fr);gap:18px}.shared-reading-book img{width:90px;height:145px}.shared-reading-book h4{font-size:20px}}
