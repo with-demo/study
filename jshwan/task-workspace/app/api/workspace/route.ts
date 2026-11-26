@@ -1,5 +1,6 @@
 import { env } from 'cloudflare:workers';
 import { z } from 'zod';
+import { normalizeTaskSchedule } from '../../task-schedule';
 import { getChatGPTUser } from '../../chatgpt-auth';
 import { emptyWorkspace, changeStatus, trashProject, restoreProject } from '../../domain';
 import type { Workspace } from '../../domain';
@@ -7,7 +8,7 @@ export const dynamic='force-dynamic';
 const date=z.string().refine(v=>v===''||(/^\d{4}-\d{2}-\d{2}$/.test(v)&&!isNaN(Date.parse(v))&&new Date(v).toISOString().slice(0,10)===v),'올바른 날짜를 입력하세요.');
 const title=z.string().trim().min(1).max(200);
 const status=z.enum(['todo','doing','done']);
-const taskInput=z.object({title,description:z.string().max(20000).default(''),status:status.default('todo'),priority:z.enum(['high','normal','low']).default('normal'),due:date.default(''),projectId:z.string().max(100).default(''),tags:z.array(z.string().trim().min(1).max(50)).max(30).default([]),checklist:z.array(z.object({id:z.string().max(100),title,done:z.boolean()})).max(100).default([])});
+const taskInput=z.object({title,description:z.string().max(20000).default(''),status:status.default('todo'),priority:z.enum(['high','normal','low']).default('normal'),due:date.default(''),useStartDate:z.boolean().default(false),startDate:date.default(''),projectId:z.string().max(100).default(''),tags:z.array(z.string().trim().min(1).max(50)).max(30).default([]),checklist:z.array(z.object({id:z.string().max(100),title,done:z.boolean()})).max(100).default([])});
 const projectInput=z.object({name:title,description:z.string().max(20000).default(''),target:date.default(''),status:z.enum(['active','paused','done']).default('active'),color:z.string().regex(/^#[0-9a-fA-F]{6}$/).default('#6561d9')});
 const settingsInput=z.object({name:title,start:z.enum(['/','/tasks','/tasks?view=today','/calendar']),weekStart:z.union([z.literal(0),z.literal(1)])});
 const stamp=z.string().datetime();
@@ -28,7 +29,7 @@ export async function POST(req:Request){
   const checkProject=(id:string)=>{if(id&&!s.projects.some(p=>p.id===id&&!p.deletedAt&&!p.archived))throw Error('사용 가능한 프로젝트를 선택하세요.');};
   let createdId:string|undefined;
   switch(cmd.action){
-   case 'task.save': {const input=taskInput.parse(cmd.payload);checkProject(input.projectId);if(cmd.id){const t=task();if(t.deletedAt)throw Error('삭제된 작업입니다.');const oldStatus=t.status;Object.assign(t,input,{status:oldStatus});changeStatus(t,input.status,now);}else{createdId=crypto.randomUUID();s.tasks.push({...input,id:createdId,createdAt:now,updatedAt:now,completedAt:input.status==='done'?now:null,deletedAt:null,deletedBy:null});}break;}
+   case 'task.save': {const input=normalizeTaskSchedule(taskInput.parse(cmd.payload));checkProject(input.projectId);if(cmd.id){const t=task();if(t.deletedAt)throw Error('삭제된 작업입니다.');const oldStatus=t.status;Object.assign(t,input,{status:oldStatus});changeStatus(t,input.status,now);}else{createdId=crypto.randomUUID();s.tasks.push({...input,id:createdId,createdAt:now,updatedAt:now,completedAt:input.status==='done'?now:null,deletedAt:null,deletedBy:null});}break;}
    case 'task.status':{const t=task();if(t.deletedAt)throw Error('삭제된 작업입니다.');changeStatus(t,status.parse(cmd.payload),now);break;}
    case 'task.duplicate':{const t=task();checkProject(t.projectId);createdId=crypto.randomUUID();s.tasks.push({...structuredClone(t),id:createdId,title:t.title.slice(0,195)+' (복사)',status:'todo',createdAt:now,updatedAt:now,completedAt:null,deletedAt:null,deletedBy:null,checklist:t.checklist.map(c=>({...c,id:crypto.randomUUID(),done:false}))});break;}
    case 'task.trash':{const t=task();t.deletedAt=now;t.deletedBy=null;t.updatedAt=now;break;}
@@ -43,7 +44,7 @@ export async function POST(req:Request){
    case 'project.purge':{const p=project();if(!p.deletedAt)throw Error('휴지통에서만 영구 삭제할 수 있습니다.');s.projects=s.projects.filter(x=>x.id!==p.id);s.tasks=s.tasks.filter(t=>t.projectId!==p.id);break;}
    case 'settings.save':s.settings=settingsInput.parse(cmd.payload);break;
    case 'backup.import':{
-    const b=backupSchema.parse(cmd.payload).data;const ids=[...b.projects,...b.tasks].map(x=>x.id);if(new Set(ids).size!==ids.length)throw Error('중복 ID가 있는 백업입니다.');
+    const b=backupSchema.parse(cmd.payload).data;b.tasks.forEach(normalizeTaskSchedule);const ids=[...b.projects,...b.tasks].map(x=>x.id);if(new Set(ids).size!==ids.length)throw Error('중복 ID가 있는 백업입니다.');
     if(b.tasks.some(t=>t.projectId&&!b.projects.some(p=>p.id===t.projectId)))throw Error('프로젝트 연결이 유효하지 않습니다.');
     if(b.tasks.some(t=>(t.status==='done')!==!!t.completedAt || (t.deletedBy&&(!t.deletedAt||t.deletedBy!==t.projectId||!b.projects.find(p=>p.id===t.projectId)?.deletedAt)) || (!t.deletedAt&&b.projects.find(p=>p.id===t.projectId)?.deletedAt)))throw Error('백업의 완료 또는 삭제 상태가 일치하지 않습니다.');
     const map=new Map(ids.map(id=>[id,crypto.randomUUID()]));s={settings:b.settings,projects:b.projects.map(p=>({...p,id:map.get(p.id)!,updatedAt:now})),tasks:b.tasks.map(t=>({...t,id:map.get(t.id)!,projectId:t.projectId?map.get(t.projectId)!:'',deletedBy:t.deletedBy?map.get(t.deletedBy)!:null,updatedAt:now,checklist:t.checklist.map(c=>({...c,id:crypto.randomUUID()}))}))} as Workspace;break;
