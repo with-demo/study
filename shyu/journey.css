@@ -1,0 +1,185 @@
+/* 책이음 상세·신청·완료: 연두색 시안의 편안한 읽기 흐름. 다른 화면과 공통 도구는 유지합니다. */
+body:is([data-screen="SHPROG-02"],[data-screen="SHAPPLY-01"],[data-screen="SHAPPLY-02"]){background:#f5f8f2}
+body:is([data-screen="SHPROG-02"],[data-screen="SHAPPLY-01"],[data-screen="SHAPPLY-02"]) #app{--green:#2d623f;--line:#e4ebdf;--muted:#687565;--ink:#25382b}
+#app :is(.detail-page,.page-reservation){width:min(1180px,calc(100% - 64px));padding-top:26px;padding-bottom:80px}
+#app :is(.detail-page,.page-reservation) .breadcrumb{font-size:14px;margin-bottom:28px;color:#6b7966}
+#app :is(.detail-page,.page-reservation) .button{min-height:50px;border-radius:14px;border-color:#d4dfcc;font-size:16px;font-weight:600;padding:12px 22px}
+#app :is(.detail-page,.page-reservation) .button.primary{background:#2d623f;border-color:#2d623f;box-shadow:0 5px 12px #2b573b12}
+#app :is(.detail-page,.page-reservation) .button.primary:hover{background:#244e33;box-shadow:0 7px 16px #2b573b22}
+#app :is(.detail-page,.page-reservation) .chip{border-radius:9px;padding:5px 11px;font-size:14px;background:#edf3e7;color:#47603b}
+#app :is(.detail-page,.page-reservation) .chip.open{background:#e8f2cb;color:#38602f}
+#app :is(.detail-page,.page-reservation) h1{font-family:var(--font-ui);font-size:36px;letter-spacing:-.045em;font-weight:700;line-height:1.4;word-break:keep-all}
+#app :is(.detail-page,.page-reservation) h2{font-size:25px;font-weight:650;line-height:1.5}
+#app :is(.detail-page,.page-reservation) .details{margin:0;line-height:1.8;grid-template-columns:88px minmax(0,1fr);gap:11px 18px}
+#app :is(.detail-page,.page-reservation) .details dt{font-size:14px;font-weight:500;color:#6b7765}
+#app :is(.detail-page,.page-reservation) .details dd{font-size:15px;color:#344230;overflow-wrap:anywhere}
+
+/* 사진, 제목, 신청 정보의 세 단계 위계 */
+.detail-page .detail-hero{display:grid;grid-template-columns:.95fr 1.05fr;gap:40px;padding:28px;background:white;border:1px solid #e7ecdf;border-radius:30px;box-shadow:0 10px 36px #3b583607;align-items:stretch;margin-bottom:28px}
+.detail-page .detail-visual{position:relative;display:flex;flex-direction:column;min-width:0}
+#app .detail-page .detail-visual .program-poster{height:440px;flex:1;min-height:360px;border-radius:24px 24px 72px 24px;background:#e5ecd9}
+.detail-page .detail-visual .program-poster:after{background:linear-gradient(0deg,#18361e20,transparent 60%)}
+.detail-page .detail-visual .poster-copy{display:none}
+.detail-photo-note{display:flex;align-items:center;gap:10px;font-size:14px;color:#58724c;padding:18px 5px 0;margin:0}
+.detail-photo-note svg{width:28px;height:25px;flex:none}
+.detail-page .detail-summary{padding:16px 8px 6px;display:flex;flex-direction:column;align-items:stretch}
+.detail-page .detail-topline{font-size:15px;font-weight:500;margin-bottom:18px;gap:15px}
+.detail-page .detail-topline>span:first-child{background:#f1ecf8;color:#75638a;border-radius:9px;padding:5px 12px}
+.detail-page .detail-summary h1{margin-bottom:12px}
+.detail-page .detail-description{font-size:16px;line-height:1.85;color:#6b7665;margin-bottom:22px}
+.detail-page .detail-summary .details{background:#f7f9f3;border-radius:18px;padding:20px;flex:1;margin-bottom:22px}
+.detail-page .detail-actions{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px}
+.detail-page .detail-actions>a:last-child{grid-column:1/-1;min-height:36px;padding:5px;border:0;background:none;color:#6b7765;font-size:14px}
+.detail-page .detail-actions .favorite-button{min-width:92px;background:#fff}
+.detail-page .detail-actions .favorite-button[aria-pressed=true]{background:#edf4e0;color:#2d623f}
+.detail-page .detail-tabs{background:#fff;border:1px solid #e5ecde;border-radius:18px;padding:6px;margin:0 0 28px;gap:4px;overflow:visible}
+.detail-page .detail-tabs button{font-size:15px;padding:14px 10px;border-radius:12px;border:0;font-weight:500}
+.detail-page .detail-tabs button:first-child{background:#edf4e0;color:#315f37;border:0}
+.detail-page .detail-tabs button:hover{background:#f3f7ed}
+.detail-page .detail-body{grid-template-columns:minmax(0,1fr) 270px;gap:26px}
+.detail-page .editorial-section{background:white;border:1px solid #e7ecdf;border-radius:24px;padding:30px;margin:0 0 22px;box-shadow:0 6px 24px #3b583603}
+.detail-page .editorial-section h2{margin-bottom:18px}
+.detail-page .intro-split{gap:24px}
+#app .detail-page .intro-split h2{font-family:var(--font-ui);font-size:28px;font-weight:650;line-height:1.55}
+.detail-page .intro-split .photo-art{height:230px;border-radius:20px}
+.detail-page .intro-split p{font-size:15px}
+.detail-page .detail-progress{font-size:14px;color:#71806b;margin:20px 0 0;line-height:1.8}
+.detail-page .editorial-section>.space-art.large{border-radius:20px;height:260px}
+.detail-page .editorial-section h3{font-size:20px;margin:15px 0 6px}
+.detail-page .editorial-section>.result-heading{margin:0 0 15px}
+.detail-page .policy-section{background:#f0f5e5;border-color:#e3ebd4}
+.detail-page .policy-section ul{font-size:15px;line-height:2;color:#56644c;margin-bottom:0}
+.detail-page .booking-sticky{background:#eaf2da;border:1px solid #e0eacb;border-radius:24px;padding:26px;top:85px}
+.detail-page .booking-sticky .booking-symbol{display:block;width:50px;height:50px;padding:10px;border-radius:17px;background:#fff9;margin-bottom:20px}
+.detail-page .booking-sticky .booking-symbol svg{width:100%;height:100%}
+.detail-page .booking-sticky strong{font-size:21px;font-weight:650;line-height:1.5}
+.detail-page .booking-sticky p{font-size:15px;line-height:1.8;margin:12px 0 22px}
+
+/* 이름·연락처·이메일을 차분하게 작성하는 신청 카드 */
+#app .page-reservation>.page-heading{padding:0;margin-bottom:26px;border:0;max-width:780px}
+.page-reservation>.page-heading:before{content:'책과 함께할 다음 시간';display:block;font-size:14px;color:#5d7950;margin-bottom:10px}
+.page-reservation .page-heading p{font-size:16px;line-height:1.8}
+.page-reservation .stepper{display:grid;grid-template-columns:repeat(3,1fr);background:#edf2e5;border:1px solid #e2e9d9;border-radius:18px;max-width:none;margin:0 0 30px;padding:6px;gap:6px;overflow:hidden}
+.page-reservation .stepper li{display:flex;justify-content:center;align-items:center;gap:9px;background:transparent;border-radius:12px;padding:14px 10px;color:#76816e;font-size:15px;line-height:1.5}
+.page-reservation .stepper li span{display:inline-grid;place-items:center;border-radius:50%;background:#dfe7d5;color:#68795c;min-width:26px;height:26px;margin:0;font-size:12px;font-weight:650}
+.page-reservation .stepper li.active{background:white;box-shadow:0 3px 9px #2e4a2310;color:#2d623f;font-weight:650}
+.page-reservation .stepper li.active span{background:#ddecbb;color:#365a2b}
+.page-reservation .application-layout{grid-template-columns:minmax(0,1fr) 330px;gap:28px;max-width:none}
+.page-reservation .application-form{background:white;border:1px solid #e7ecdf;border-radius:26px;padding:32px;box-shadow:0 10px 32px #3b583605;min-width:0}
+.page-reservation .form-section-heading{border:0;padding-bottom:0;gap:10px}
+.page-reservation .form-section-heading h2{font-size:24px;margin:0}
+.page-reservation .form-section-heading span{font-size:13px;white-space:nowrap}
+.application-welcome{font-size:15px;line-height:1.8;color:#6a7762;margin:9px 0 24px}
+.page-reservation .application-form .field{font-size:15px;font-weight:600;margin-top:23px;gap:10px}
+#app .page-reservation input:not([type=checkbox]){border:1px solid #dce4d6;border-radius:12px;min-height:52px;background:#fbfcf9;padding:13px 15px;font-size:16px;transition:border-color .15s,box-shadow .15s}
+#app .page-reservation input:not([type=checkbox]):focus{background:white;border-color:#70925d;box-shadow:0 0 0 4px #dce9cc70}
+#app .page-reservation input[aria-invalid=true]{border-color:#b64f44;background:#fffafa}
+.page-reservation .field-help{font-size:14px;color:#718067;margin:7px 0 0}
+.page-reservation .error{font-size:14px;margin:7px 0 0}
+.page-reservation .error:empty{margin:0}
+.page-reservation .participation-count{display:flex;align-items:center;justify-content:space-between;background:#f5f8ef;border-radius:14px;padding:15px 18px;margin-top:26px;font-size:15px}
+.page-reservation .participation-count p{padding:0;margin:0;background:none;color:#47623c}
+.page-reservation .participation-count strong{font-weight:500}
+.page-reservation .application-policy{border:0;padding:22px;background:#fcf5ec;border-radius:18px;margin-top:25px}
+.page-reservation .application-policy h2{font-size:18px;margin-bottom:10px;color:#69513a}
+.page-reservation .application-policy ul{font-size:14px;color:#7a6957;line-height:1.9;margin:0;padding-left:19px}
+.page-reservation .consent-panel{background:#f2f6eb;border:1px solid #e3ead8;border-radius:18px;padding:24px;margin:24px 0}
+.page-reservation .consent-panel h3{font-size:18px;margin-bottom:13px;font-weight:650}
+.page-reservation .consent-panel p{font-size:14px;line-height:1.9;color:#6a785f}
+.page-reservation .consent-panel .check{font-size:14px;border-top:1px solid #dfe7d5;padding-top:16px;margin-top:18px;align-items:flex-start;gap:10px;line-height:1.8}
+.page-reservation .consent-panel input[type=checkbox]{flex:none;margin-top:4px;width:19px;height:19px}
+.page-reservation .info-box{background:transparent;border:0;padding:0;font-size:14px;color:#718067;line-height:1.8}
+.page-reservation .form-actions{margin-top:24px;gap:12px}
+.page-reservation .form-help{font-size:14px;text-align:center;margin:24px 0 0}
+.page-reservation .application-summary{background:#edf3e2;border:1px solid #e1e9d4;border-radius:25px;padding:24px;position:sticky;top:85px;box-shadow:none}
+.page-reservation .application-summary h2{font-size:18px;margin:0 0 18px;color:#637957;font-weight:500}
+.page-reservation .application-summary .program-poster{height:190px;border-radius:18px}
+.page-reservation .application-summary h3{font-size:23px;font-weight:650;margin:20px 0 10px;line-height:1.5}
+.page-reservation .application-summary .chip{background:#fff9}
+.page-reservation .application-summary .details{grid-template-columns:60px minmax(0,1fr);gap:12px;margin:22px 0}
+.page-reservation .application-summary>.text-link{font-size:14px;border-color:#d9e3cb;margin:0;padding-top:17px}
+
+/* 완료는 성공 메시지 → 행사 → 신청 정보 → 다음 행동 순서 */
+#app .page-reservation:has(.completion-panel){max-width:960px}
+.page-reservation:has(.completion-panel)>.page-heading{display:none}
+.page-reservation .completion-panel{padding:0;border:1px solid #e4ecdb;border-radius:30px;overflow:hidden;background:white;max-width:none;box-shadow:0 10px 36px #3b583607;text-align:left}
+.completion-greeting{text-align:center;padding:38px 30px 30px;background:radial-gradient(ellipse at 50% 0%,#e7f1d2 0,transparent 70%),#f7faf1}
+.page-reservation .complete-icon{display:grid;place-items:center;width:70px;height:70px;border-radius:25px;background:#deedbb;color:#426d34;box-shadow:0 0 0 10px #f0f6e5;margin:10px auto 28px;font-size:34px;transform:rotate(-5deg)}
+#app .completion-greeting h1{font-size:30px;line-height:1.5;letter-spacing:-.04em;margin-bottom:10px;word-break:keep-all}
+.completion-greeting p{font-size:16px;color:#6c7c60;line-height:1.8;margin-bottom:18px}
+.completion-content{padding:30px 38px 36px}
+.completion-program{display:grid;grid-template-columns:115px minmax(0,1fr);gap:22px;align-items:center;padding:20px;background:#f7f9f3;border-radius:20px;margin-bottom:28px}
+.completion-program .program-poster{height:120px;border-radius:15px}
+.completion-program .completion-category{font-size:14px;color:#708563;margin:0 0 6px}
+#app .completion-program h3{font-size:24px;margin:0 0 8px;font-weight:650;line-height:1.4}
+.completion-program .completion-place{font-size:15px;margin:0;color:#6d7b65}
+.completion-content .receipt-heading{font-size:17px;margin:0 0 18px;color:#415a37}
+.completion-content>.details{padding:0 4px 26px;border-bottom:1px dashed #dfe7d5;grid-template-columns:105px minmax(0,1fr)}
+.completion-content>.details dt,.completion-content>.details dd{padding-block:3px}
+.completion-next{font-size:14px;background:#f5f1fa;color:#7c6c8b;padding:16px 20px;border-radius:14px;margin:24px 0;line-height:1.8}
+.page-reservation .completion-panel .controls{display:grid;grid-template-columns:1fr 1fr;gap:12px;justify-content:stretch}
+.page-reservation .completion-panel .controls .button:first-child{grid-column:1/-1}
+
+/* 공통 확인 팝업은 ID·키보드·확인 동작을 유지하고 시각만 맞춥니다. */
+body:is([data-screen="SHPROG-02"],[data-screen="SHAPPLY-01"],[data-screen="SHAPPLY-02"]) #reservation-dialog{border:1px solid #e0e9d8;border-radius:24px;padding:28px;box-shadow:0 24px 100px #263e2930;max-width:min(500px,calc(100% - 32px))}
+body:is([data-screen="SHPROG-02"],[data-screen="SHAPPLY-01"],[data-screen="SHAPPLY-02"]) #reservation-dialog::backdrop{background:#18351f50;backdrop-filter:blur(3px)}
+body:is([data-screen="SHPROG-02"],[data-screen="SHAPPLY-01"],[data-screen="SHAPPLY-02"]) #reservation-dialog button{border-radius:12px;min-height:44px}
+
+@media(max-width:950px){
+ .detail-page .detail-hero{gap:24px;padding:22px}
+ #app .detail-page .detail-visual .program-poster{height:420px}
+ #app .detail-page .detail-summary h1{font-size:29px}
+ .detail-page .detail-body{grid-template-columns:minmax(0,1fr) 230px;gap:20px}
+ .detail-page .editorial-section{padding:24px}
+ .detail-page .intro-split{grid-template-columns:1fr}
+ .page-reservation .application-layout{grid-template-columns:minmax(0,1fr) 280px;gap:20px}
+ .page-reservation .application-form{padding:24px}
+ .page-reservation .application-summary{padding:20px}
+}
+@media(max-width:700px){
+ #app :is(.detail-page,.page-reservation){width:calc(100% - 32px);padding-top:20px;padding-bottom:40px}
+ #app :is(.detail-page,.page-reservation) .breadcrumb{font-size:12px;margin-bottom:20px}
+ #app :is(.detail-page,.page-reservation) h1{font-size:28px}
+ .detail-page .detail-hero{grid-template-columns:1fr;padding:16px;gap:18px;border-radius:24px}
+ #app .detail-page .detail-visual .program-poster{height:270px;min-height:270px;flex:none;border-radius:18px 18px 52px 18px}
+ .detail-page .detail-photo-note{padding-top:12px;font-size:13px}
+ .detail-page .detail-summary{padding:8px 2px 2px}
+ .detail-page .detail-topline{margin-bottom:15px;font-size:14px}
+ .detail-page .detail-description{font-size:15px}
+ .detail-page .detail-summary .details{padding:18px;gap:10px 12px;grid-template-columns:70px minmax(0,1fr)}
+ .detail-page .detail-tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:4px;padding:6px;border-radius:18px}
+ .detail-page .detail-tabs button{font-size:14px;padding:11px 5px;white-space:normal}
+ .detail-page .detail-body{grid-template-columns:1fr}
+ .detail-page .editorial-section{padding:23px 20px;border-radius:22px}
+ #app .detail-page .intro-split h2{font-size:25px}
+ .detail-page .booking-sticky{position:static;display:block;padding:24px}
+ .detail-page .booking-sticky .button{width:100%;margin:0}
+ .detail-page .booking-sticky .booking-symbol{display:none}
+ .page-reservation .stepper{padding:5px;gap:3px;margin-bottom:22px;border-radius:15px}
+ .page-reservation .stepper li{flex-direction:column;gap:6px;font-size:12px;padding:10px 3px;text-align:center;border-radius:10px}
+ .page-reservation .stepper li span{width:23px;height:23px;min-width:23px;font-size:11px}
+ .page-reservation .application-layout{display:flex;flex-direction:column;gap:20px}
+ .page-reservation .application-form{order:1;width:100%;padding:23px 20px;border-radius:22px}
+ .page-reservation .application-summary{order:0;position:static;display:grid;width:100%;grid-template-columns:85px minmax(0,1fr);gap:6px 16px;padding:20px;border-radius:22px}
+ .page-reservation .application-summary h2{grid-column:1/-1;margin:0 0 8px;font-size:16px}
+ .page-reservation .application-summary .program-poster{grid-row:2/5;height:100%;min-height:135px;border-radius:12px}
+ .page-reservation .application-summary h3{font-size:20px;margin:0;word-break:keep-all}
+ .page-reservation .application-summary .chip{justify-self:start;font-size:12px}
+ .page-reservation .application-summary .details{grid-template-columns:45px minmax(0,1fr);gap:3px 9px;margin:4px 0}
+ #app .page-reservation .application-summary .details dt,#app .page-reservation .application-summary .details dd{font-size:13px}
+ .page-reservation .application-summary>.text-link{grid-column:1/-1;margin-top:10px;padding-top:12px}
+ .page-reservation .consent-panel{padding:19px}
+ .page-reservation .form-section-heading h2{font-size:22px}
+ .page-reservation .completion-panel{border-radius:24px}
+ .completion-greeting{padding:30px 20px 24px}
+ #app .completion-greeting h1{font-size:25px}
+ .completion-greeting p{font-size:15px}
+ .completion-content{padding:22px 20px 26px}
+ .completion-program{padding:15px;grid-template-columns:80px minmax(0,1fr);gap:16px;border-radius:16px}
+ .completion-program .program-poster{height:95px;border-radius:11px}
+ #app .completion-program h3{font-size:20px}
+ .completion-program .completion-place{font-size:14px}
+ .completion-content>.details{grid-template-columns:75px minmax(0,1fr);gap:9px 12px}
+ .page-reservation .completion-panel .controls{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){#app :is(.detail-page,.page-reservation) *{scroll-behavior:auto;transition:none}}
