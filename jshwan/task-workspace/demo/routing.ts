@@ -5,6 +5,8 @@ export const studyScreens=[
  {id:'JST-TASK-02',route:'/tasks?view=today',title:'오늘',summary:'오늘 마감과 기한 초과 작업을 나누어 표시합니다.'},
  {id:'JST-TASK-03',route:'/tasks?view=upcoming',title:'예정',summary:'내일 이후 마감인 미완료 작업을 날짜별로 표시합니다.'},
  {id:'JST-TASK-04',route:'/tasks?view=done',title:'완료',summary:'완료한 작업을 확인하고 다시 열 수 있습니다.'},
+ {id:'JST-TASK-05',route:'/tasks?view=overdue',title:'기한 초과',summary:'오늘 이전에 마감한 미완료 작업을 확인합니다.'},
+ {id:'JST-TASK-06',route:'/tasks?view=doing',title:'진행 중',summary:'현재 진행 중인 작업을 확인합니다.'},
  {id:'JST-PROJ-01',route:'/projects',title:'프로젝트',summary:'프로젝트 생성·수정, 완료율과 소속 작업을 확인합니다.'},
  {id:'JST-CAL-01',route:'/calendar',title:'캘린더',summary:'월간 일정과 날짜별 작업 추가를 체험합니다.'},
  {id:'JST-ARCH-01',route:'/archive',title:'보관함',summary:'보관한 프로젝트를 조회하고 보관을 해제합니다.'},
@@ -15,4 +17,16 @@ export const studyScreens=[
 ];
 export function demoPath(){const hash=decodeURIComponent(location.hash.slice(1));if(hash==='screens')return '/screens';return studyScreens.find(s=>s.id===hash)?.route||(hash.startsWith('/')?hash:'/login');}
 export function demoNavigate(route:string){const screen=studyScreens.find(s=>s.route===route);const hash=route==='/screens'?'screens':screen?.id||route;history.pushState({},'',location.pathname+location.search+'#'+hash);window.dispatchEvent(new HashChangeEvent('hashchange'));}
-export function updateDescriptionContext(route:string,popup:'task'|'project'|'search'|null){const screen=studyScreens.find(s=>s.route===route);const id=screen?.id||(route.startsWith('/projects/')?'JST-PROJ-02':'JST-TASK-01');document.body.dataset.screen=id;const w=window as unknown as Record<string,unknown>;if(popup)w.MOCKUP_DESCRIPTION_CONTEXT={id:id+'-'+({task:'p01',project:'p02',search:'p03'}[popup]),title:popup==='task'?'작업 상세':popup==='project'?'프로젝트 편집':'통합 검색'};else delete w.MOCKUP_DESCRIPTION_CONTEXT;window.dispatchEvent(new Event('study-description-update'));}
+export function screenIdForRoute(route:string){
+ if(route==='/screens')return 'screens';
+ const [path,query]=route.split('?');const params=new URLSearchParams(query);
+ if(path.startsWith('/projects/'))return params.get('tab')==='board'?'JST-PROJ-04':params.get('tab')==='list'?'JST-PROJ-03':'JST-PROJ-02';
+ return studyScreens.find(s=>s.route===route)?.id||'JST-TASK-01';
+}
+export function updateDescriptionContext(route:string,popup:'task'|'project'|'search'|null){
+ const id=screenIdForRoute(route);document.body.dataset.screen=id;
+ const w=window as unknown as Record<string,unknown>;
+ if(popup)w.MOCKUP_DESCRIPTION_CONTEXT={id:id+'-'+({task:'p01',project:'p02',search:'p03'}[popup]),title:popup==='task'?'작업 상세':popup==='project'?'프로젝트 편집':'통합 검색'};
+ else delete w.MOCKUP_DESCRIPTION_CONTEXT;
+ window.dispatchEvent(new Event('study-description-update'));
+}

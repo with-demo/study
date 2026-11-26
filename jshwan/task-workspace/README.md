@@ -43,3 +43,7 @@ npm run build:demo
 ## 검증
 
 데모 로그인, 인증·네트워크 없는 저장, 로그아웃 후 유지, 잘못된 입력, 완료·다시 열기, 버전 충돌, 저장 공간 실패, 삭제·복원, 백업 검증 테스트 9개와 TypeScript·정적 빌드를 확인합니다. 실제 브라우저 화면 검증 여부는 PR의 검증 결과를 참고하세요.
+
+## 화면별 기능 명세
+
+[화면별 Description](SCREEN-DESCRIPTIONS.md)에서 18개 화면과 3종 팝업의 기능을 확인할 수 있습니다. 사이트 상단 **Description 열기**를 누르면 현재 화면의 설명과 번호를 함께 볼 수 있습니다. 원본은 demo/descriptions.ts이며 npm run build:demo 실행 시 GitHub 문서를 함께 생성합니다.
