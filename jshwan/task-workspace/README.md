@@ -2,6 +2,16 @@
 
 개인 작업, 프로젝트, 일정을 한곳에서 관리하는 한국어 웹 앱입니다. 제공된 사이트맵·기능 명세 v0.2를 기준으로 구현했습니다.
 
+## 사이트 바로 열기
+
+**[Task 사이트 실행하기](https://task-workspace-1126-personal.independentemery17.chatgpt.site)**
+
+위 링크는 로그인과 서버 저장이 연결된 실제 서비스입니다. 현재 사이트는 소유자 비공개로 배포되어 있어 해당 계정으로 로그인해야 합니다. GitHub 저장소를 볼 수 있는 권한과 사이트 방문 권한은 별개입니다.
+
+[이전 여행 사이트 보기](https://with-demo.github.io/study/jshwan/)
+
+이전 여행 사이트는 HTML·CSS·JavaScript로 구성되어 GitHub Pages에서 실행됩니다. 이번 Task 앱은 서버 API와 D1 데이터베이스를 사용하므로 GitHub Pages에 소스를 올리는 것만으로 실행되지 않습니다. 이 저장소에서 코드를 관리하고 위 링크에서 서비스를 이용합니다.
+
 ## 기능
 
 - ChatGPT 계정 로그인과 계정별 서버 저장
