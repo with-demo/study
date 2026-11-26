@@ -13,7 +13,7 @@ const content=document.querySelector('#content'), dialog=document.querySelector(
 
 
 
-const programs=rows.map(([name,type,district,place,description,mark,tint,offset,capacity,filled,pos],i)=>({key:`book-${i+1}`,name,type:types[type],district,place,description,mark,tint,offset,capacity,filled,pos,image:programImages[i],spaceImage:spaceImages[i],mapPosition:mapPositions[i]}));
+const programs=rows.map(([name,type,district,place,description,mark,tint,offset,capacity,filled,pos],i)=>({key:`book-${i+1}`,name,type:types[type],district,place,description,mark,tint,offset,capacity,filled,pos,image:programImages[i%programImages.length],spaceImage:spaceImages[i%spaceImages.length],mapPosition:mapPositions[i]}));
 const now=new Date();
 const demoDateKey="shyu.reading.demo-date.v1";
 let demoDate=new Date(localStorage.getItem(demoDateKey) || now);
@@ -80,7 +80,11 @@ const cards=items=>items.length?`<div class="cards">${items.map(card).join('')}<
 const hero=`<div class="hero"><div class="frame hero-inner"><div><p class="eyebrow">SEOUL READING PROGRAMS</p><h1>서울에서 만나는<br>책과 이야기</h1><p>독서모임, 작가와의 만남, 동네서점 북토크를 한곳에서 찾아보세요.</p></div>
  <svg class="hero-art" viewBox="0 0 360 220" aria-hidden="true"><circle cx="184" cy="108" r="96" fill="#eef1de"/><path d="M45 186h270" stroke="#456e52" stroke-width="3" stroke-linecap="round"/><rect x="80" y="91" width="38" height="94" rx="5" fill="#bd6a43"/><rect x="123" y="66" width="38" height="119" rx="5" fill="#356449"/><rect x="167" y="78" width="30" height="107" rx="5" fill="#dca958"/><path d="M210 104l27-12 39 83-27 12z" fill="#6b8b72"/><path d="M92 107h14m29-24h14m30 13h7" stroke="#fff2d6" stroke-width="3" stroke-linecap="round"/><path d="M264 62v26m-13-13h26" stroke="#bd6a43" stroke-width="3" stroke-linecap="round"/></svg></div></div>`;
 function explore(n){
- const items=programs.filter(match).sort((a,b)=>state(a)[filters.sort==='deadline'?'closes':'start']-state(b)[filters.sort==='deadline'?'closes':'start']);
+ const items=programs.filter(match).sort((a,b)=>{
+  const sa=state(a),sb=state(b),field=filters.sort==='deadline'?'closes':'start';
+  // 전체 검색 결과에서 마감 그룹을 뒤로 배치한 다음 페이지를 나눕니다.
+  return Number(sa.status==='접수 마감')-Number(sb.status==='접수 마감')||sa[field]-sb[field];
+ });
  const modes=[[1,'목록'],[9,'캘린더']].map(([i,name])=>`<a class="mode" href="#${id(i)}" ${n===i?'aria-current="page"':''}>${name}</a>`).join('');
  const body=`${filterBar()}<div class="result-heading"><h2>프로그램 <small>${items.length}건</small></h2><div class="controls"><label class="result-size">표시 건수 <select id="program-page-size" aria-label="페이지당 표시 건수">${[3,6,12].map(size=>'<option value="'+size+'" '+(size===programPageSize?'selected':'')+'>'+size+'개씩 보기</option>').join('')}</select></label><nav class="controls" aria-label="탐색 방식">${modes}</nav></div></div>${n===9?calendarView(items):cards(items.slice((programPage-1)*programPageSize,programPage*programPageSize))+pagination(items.length,programPage,'program',programPageSize)}`;
  return page('PROGRAMS',n===9?'독서 캘린더':'독서 프로그램',body);
@@ -221,7 +225,7 @@ const PAGE_SIZE=3;
 const sampleReview={ref:'sample-review',key:programs[4].key,title:'책을 따라 동네를 새롭게 만났어요',text:'혼자 읽을 때는 지나쳤던 문장을 다른 분들과 함께 이야기하며 다시 발견했습니다. 산책과 독서를 함께 할 수 있어 좋았어요.',rating:5,created:dateAt(-1,14).getTime(),sample:true};
 const allReviews=()=>[...reviews,sampleReview].sort((a,b)=>b.created-a.created);
 const placeType=p=>['book-1','book-4'].includes(p.key)?'독립서점':'도서관·문화공간';
-const address=p=>`서울특별시 ${p.district} 책길 ${Number(p.key.slice(-1))*12}`;
+const address=p=>`서울특별시 ${p.district} 책길 ${Number(p.key.split('-')[1])*12}`;
 const selectedPlace=()=>programs.find(p=>p.key===selectedSpace)||programs[0];
 const note=()=>'';
 const exampleBooking=()=>({key:programs[0].key,name:'실습 참가자',email:'reader@example.test',ref:'SH-PREVIEW-0001',created:Date.now(),cancelled:false,preview:true});
