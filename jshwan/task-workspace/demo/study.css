@@ -1,0 +1,13 @@
+body[data-project="jshwan-task"]{--sb-toolbar-height:54px}
+body[data-project="jshwan-task"] .sidebar{top:var(--sb-toolbar-height);z-index:20}
+body[data-project="jshwan-task"] .app-shell{min-height:calc(100vh - var(--sb-toolbar-height))}
+body[data-project="jshwan-task"] .login{min-height:calc(100vh - var(--sb-toolbar-height))}
+body[data-project="jshwan-task"] .modal-backdrop{top:var(--sb-toolbar-height)}
+body[data-project="jshwan-task"] .drawer{height:calc(100dvh - var(--sb-toolbar-height))}
+body[data-project="jshwan-task"] .ui-spec-panel{padding:24px;font-size:14px;color:#554963}
+body[data-project="jshwan-task"] .ui-spec-panel p{margin-top:16px}
+body[data-project="jshwan-task"] .ui-spec-actions label,body[data-project="jshwan-task"] [data-spec="numbers"],body[data-project="jshwan-task"] [data-spec="refresh"]{display:none!important}
+body[data-project="jshwan-task"] .ui-spec-preview{font-size:12px}
+body[data-project="jshwan-task"] .ui-spec-layout.with-spec .sidebar{width:210px}
+body[data-project="jshwan-task"] .ui-spec-layout.with-spec .main-wrap{margin-left:210px}
+@media(max-width:680px){body[data-project="jshwan-task"] .ui-spec-layout.with-spec .main-wrap{margin-left:0}}
