@@ -33,19 +33,21 @@ const questions = [
  ['계정','회원정보는 어디에서 변경하나요?','로그인 후 마이페이지 > 내 정보에서 이름·연락처·이메일을 확인하고 변경할 수 있습니다.'],
  ['이용','지도와 캘린더의 일정은 무엇을 기준으로 하나요?','지도에서는 프로그램이 열리는 공간을, 캘린더에서는 실제 행사 개최일을 기준으로 프로그램을 찾습니다. 접수기간은 상세에서 별도로 확인해 주세요.']
 ];
+// 프로그램별 사진을 지정해 메인 추천 카드의 반복을 줄입니다.
+const imagePool={
+ reading:{file:'korea-reading.jpg',alt:'한국의 카페에서 책을 읽는 차분한 독서 장면',position:'38% 65%'},
+ books:{file:'korean-books.jpg',alt:'한글 도서가 꽂힌 따뜻한 나무 책장',position:'50% 50%'},
+ library:{file:'korea-library.jpg',alt:'국내 도서관의 높은 서가와 독서 공간',position:'50% 68%'},
+ lounge:{file:'korea-book-lounge.jpg',alt:'큰 창으로 빛이 드는 국내 북라운지',position:'50% 75%'},
+ bookshop:{file:'seoul-bookshop.jpg',alt:'서울 독립서점의 책 진열과 나무 테이블',position:'50% 55%'}
+};
 const programImages=[
- {file:'seoul-bookshop.jpg',alt:'서울의 작은 서점에 놓인 책장과 나무 테이블',position:'50% 55%'},
- {file:'korean-books.jpg',alt:'따뜻한 빛이 비치는 한글 도서와 나무 책장',position:'50% 50%'},
- {file:'korea-library.jpg',alt:'국내 도서관의 높은 책장과 독서 공간',position:'50% 68%'},
- {file:'seoul-bookshop.jpg',alt:'아늑한 서울 서점의 도서 진열과 조명',position:'75% 50%'},
- {file:'korea-reading.jpg',alt:'한국의 카페에서 책을 읽는 차분한 독서 장면',position:'38% 65%'}
+ imagePool.reading, imagePool.books, imagePool.library, imagePool.lounge,
+ imagePool.bookshop, imagePool.books, imagePool.reading, imagePool.bookshop,
+ imagePool.books, imagePool.library, imagePool.lounge, imagePool.bookshop,
+ imagePool.reading, imagePool.library
 ];
-const spaceImages=[
- programImages[0],
- {file:'korea-book-lounge.jpg',alt:'큰 창과 서가가 있는 국내 북라운지',position:'50% 75%'},
- programImages[2],programImages[3],
- {file:'korea-book-lounge.jpg',alt:'국내 도서관의 서가와 함께 책을 읽는 공간',position:'50% 85%'}
-];
+const spaceImages=[imagePool.bookshop,imagePool.lounge,imagePool.library,imagePool.bookshop,imagePool.lounge];
 // 가상 공간의 지역별 예시 좌표. 실제 기관 위치를 의미하지 않습니다.
 const mapPositions=[[37.5496,126.9140],[37.6027,126.9291],[37.5730,126.9794],[37.5445,127.0560],[37.5145,127.1059],[37.606,127.018],[37.579,126.936],[37.533,126.981],[37.563,126.998],[37.654,127.062],[37.526,126.902],[37.501,127.039],[37.505,126.946],[37.478,126.952]];
 return {screenDefs,types,districts,rows,notices,questions,programImages,spaceImages,mapPositions};
