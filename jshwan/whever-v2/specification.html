@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Whever v2 · 사이트맵과 기능 명세</title>
+  <link rel="icon" href="./assets/logo-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./specification.css">
+  <script src="./specification.js" defer></script>
+  <script src="./specification-view.js" defer></script>
+</head>
+<body>
+  <header><a class="brand" href="./index.html">Whever <span>v2</span></a><a href="./index.html#screens">화면 미리보기</a></header>
+  <main>
+    <p class="eyebrow">PROJECT GUIDE</p><h1>사이트맵과 페이지별 기능</h1>
+    <p class="lead">화면을 열어 흐름을 확인하고, 기능 번호로 구현 범위를 찾아보세요.</p>
+    <p class="source">기준 문서: Whever_사이트맵_페이지별기능.xlsx · 2026-11-25</p>
+    <div class="summary"><span><strong>5</strong> 주요 화면</span><span><strong>30</strong> 도시</span><span><strong>245</strong> 장소</span><span><strong>57</strong> 기능</span></div>
+    <p class="notice">항공편과 가격은 예시 데이터입니다. 관심 목록은 브라우저에 저장됩니다. 공통 기획 도구는 연결되어 있으며 새 프로젝트의 공동 로그인·서버 저장은 별도 연결 확인이 필요합니다.</p>
+    <section aria-labelledby="sitemap-title"><h2 id="sitemap-title">화면 구성</h2><p>원본의 JSH 화면은 새 버전에서 JSH2로 구분합니다. 팝업은 연결된 화면의 버튼으로 엽니다.</p><div id="screens" class="screens"></div></section>
+    <section aria-labelledby="feature-title"><h2 id="feature-title">페이지별 기능</h2><div class="filters"><label>기능 검색<input id="search" type="search" placeholder="기능 번호, 화면, 검색어"></label><label>화면<select id="screen-filter"><option value="">모든 화면</option></select></label><button id="reset" type="button">초기화</button></div><p id="count" role="status" aria-live="polite"></p><div class="table-wrap" tabindex="0" role="region" aria-label="페이지별 기능 목록"><table><thead><tr><th>기능 / 화면</th><th>기능</th><th>입력·조건</th><th>동작과 연결</th><th>범위·제약</th></tr></thead><tbody id="features"></tbody></table></div></section>
+  </main><footer>Whever v2 · HTML / CSS / JavaScript</footer>
+</body></html>
